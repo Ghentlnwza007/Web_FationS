@@ -105,6 +105,21 @@ const collections = {
           { name: "Cream", hex: "#fff", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/FLAT6.jpg" },
         ],
       },
+      {
+        id: 101,
+        name: "Kasper Digi Waffle T-Shirt",
+        price: 12990.43,
+        model: "Digi Waffle Premium",
+        size: "S, M, L, XL",
+        material: "100% Cotton Waffle Knit",
+        color: "Cream",
+        stock: 10,
+        image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMT6381_3.jpg",
+        colorVariants: [
+          { name: "Cream", hex: "#f5f5dc", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMT6381_3.jpg" },
+        ],
+        tag: "NEW",
+      },
     ],
   },
   women: {
@@ -214,6 +229,36 @@ const collections = {
         colorVariants: [
           { name: "Jelly Brown/Amber", hex: "#bcaaa4", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/STYLE_12.jpg?v=1751897296" },
         ],
+      },
+      {
+        id: 102,
+        name: "Shadow Studded Corset Top",
+        price: 15490.76,
+        model: "Studded Leather Corset",
+        size: "S, M, L, XL, XXL",
+        material: "Premium Leather with Metal Studs",
+        color: "Black",
+        stock: 10,
+        image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/11NOVWW0238.jpg",
+        colorVariants: [
+          { name: "Black", hex: "#1a1a1a", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/11NOVWW0238.jpg" },
+        ],
+        tag: "HOT",
+      },
+      {
+        id: 103,
+        name: "Black Mist Mini Dress",
+        price: 8990.90,
+        model: "Mist Collection",
+        size: "XS, S, M, L",
+        material: "Premium Stretch Fabric",
+        color: "Black",
+        stock: 10,
+        image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/Artboard1_89082489-8716-4060-b764-2095115259e3.jpg",
+        colorVariants: [
+          { name: "Black", hex: "#0d0d0d", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/Artboard1_89082489-8716-4060-b764-2095115259e3.jpg" },
+        ],
+        tag: "NEW",
       },
     ],
   },
@@ -375,6 +420,21 @@ const collections = {
         colorVariants: [
           { name: "Silver", hex: "#e0e0e0", image: "https://hotdiamonds.co.uk/images/trio-bangle-p3481-11871_image.jpg" },
         ],
+      },
+      {
+        id: 104,
+        name: "Mendoza Faux Fur Jacket",
+        price: 6490.87,
+        model: "Mendoza Collection",
+        size: "One Size",
+        material: "High-Quality Faux Fur",
+        color: "Brown",
+        stock: 10,
+        image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/29SEP1629.jpg",
+        colorVariants: [
+          { name: "Brown", hex: "#8d6e63", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/29SEP1629.jpg" },
+        ],
+        tag: "SALE",
       },
     ],
   },
@@ -1081,6 +1141,27 @@ function NewArrivals() {
 // ABOUT SECTION
 // =============================================
 function About() {
+  const [showCreators, setShowCreators] = useState(false);
+
+  const creators = [
+    {
+      id: 1,
+      name: "ผู้จัดทำคนที่ 1",
+      role: "Lead Developer & Designer",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+      description: "รับผิดชอบการพัฒนาระบบ Front-end และออกแบบ UI/UX ของเว็บไซต์",
+      skills: ["React", "JavaScript", "CSS", "UI Design"]
+    },
+    {
+      id: 2,
+      name: "ผู้จัดทำคนที่ 2",
+      role: "Backend Developer & Project Manager",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
+      description: "รับผิดชอบการพัฒนาระบบ Backend และจัดการโปรเจกต์",
+      skills: ["Node.js", "Database", "API", "Project Management"]
+    }
+  ];
+
   return (
     <section className="about" id="about">
       <div className="about-wrapper">
@@ -1114,6 +1195,46 @@ function About() {
               <div className="feature-number">50+</div>
               <div className="feature-label">Countries</div>
             </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* MORE Button */}
+      <div className="more-section">
+        <button 
+          className={`more-btn ${showCreators ? 'active' : ''}`}
+          onClick={() => setShowCreators(!showCreators)}
+        >
+          <span>{showCreators ? 'CLOSE' : 'MORE'}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={showCreators ? 'rotate' : ''}>
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        
+        {/* Creators Section */}
+        <div className={`creators-panel ${showCreators ? 'open' : ''}`}>
+          <div className="creators-header">
+            <h3>ผู้จัดทำโปรเจกต์</h3>
+            <p>พบกับทีมผู้พัฒนาเว็บไซต์ MAISON</p>
+          </div>
+          <div className="creators-grid">
+            {creators.map((creator) => (
+              <div key={creator.id} className="creator-card">
+                <div className="creator-image">
+                  <img src={creator.image} alt={creator.name} />
+                </div>
+                <div className="creator-info">
+                  <h4 className="creator-name">{creator.name}</h4>
+                  <span className="creator-role">{creator.role}</span>
+                  <p className="creator-description">{creator.description}</p>
+                  <div className="creator-skills">
+                    {creator.skills.map((skill, index) => (
+                      <span key={index} className="skill-tag">{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -1213,7 +1334,7 @@ function Footer() {
           <h4>ติดต่อเรา</h4>
           <ul className="contact-list">
             <li>
-              <span className="contact-icon">📍</span>
+              <span className="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
               <div className="contact-info">
                 <span className="contact-label">ที่อยู่</span>
                 <span>123 ถนนสุขุมวิท แขวงคลองตัน</span>
@@ -1221,7 +1342,7 @@ function Footer() {
               </div>
             </li>
             <li>
-              <span className="contact-icon">📞</span>
+              <span className="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
               <div className="contact-info">
                 <span className="contact-label">โทรศัพท์</span>
                 <a href="tel:+6621234567">02-123-4567</a>
@@ -1229,21 +1350,21 @@ function Footer() {
               </div>
             </li>
             <li>
-              <span className="contact-icon">✉️</span>
+              <span className="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
               <div className="contact-info">
                 <span className="contact-label">อีเมล</span>
                 <a href="mailto:contact@maison.co.th">contact@maison.co.th</a>
               </div>
             </li>
             <li>
-              <span className="contact-icon">💬</span>
+              <span className="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
               <div className="contact-info">
                 <span className="contact-label">Line Official</span>
                 <a href="https://line.me/ti/p/@maison">@maison</a>
               </div>
             </li>
             <li>
-              <span className="contact-icon">🕐</span>
+              <span className="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
               <div className="contact-info">
                 <span className="contact-label">เวลาทำการ</span>
                 <span>จันทร์ - ศุกร์: 10:00 - 20:00</span>
@@ -1268,6 +1389,7 @@ function ProductCard({ product }) {
   const { addToCart } = useContext(CartContext);
   const { toggleWishlist, isInWishlist } = useContext(WishlistContext);
   const { isLoggedIn, openAuthModal } = useContext(AuthContext);
+  const { formatPrice } = useContext(CurrencyContext);
   const [showSizeModal, setShowSizeModal] = useState(false);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   
@@ -1281,13 +1403,6 @@ function ProductCard({ product }) {
   const currentColorName = hasColorVariants 
     ? product.colorVariants[selectedColorIndex].name 
     : product.color;
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("th-TH", {
-      style: "currency",
-      currency: "THB",
-    }).format(price);
-  };
 
   const handleAddToCartClick = () => {
     if (!isLoggedIn) {
@@ -1319,7 +1434,7 @@ function ProductCard({ product }) {
             className={`product-wishlist ${wishlisted ? 'active' : ''}`}
             onClick={handleWishlistClick}
           >
-            {wishlisted ? "❤️" : "🤍"}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
         </div>
         <div className="product-info">
@@ -1452,7 +1567,9 @@ function CartSidebar() {
         <div className="cart-items">
           {cart.length === 0 ? (
             <div className="cart-empty">
-              <div className="cart-empty-icon">🛒</div>
+              <div className="cart-empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </div>
               <p>Your cart is empty</p>
             </div>
           ) : (
@@ -1484,7 +1601,7 @@ function CartSidebar() {
                   className="cart-item-remove"
                   onClick={() => removeFromCart(item.id)}
                 >
-                  🗑️
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
               </div>
             ))
@@ -1524,13 +1641,7 @@ function WishlistSidebar() {
     setIsWishlistOpen,
   } = useContext(WishlistContext);
   const { addToCart } = useContext(CartContext);
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("th-TH", {
-      style: "currency",
-      currency: "THB",
-    }).format(price);
-  };
+  const { formatPrice } = useContext(CurrencyContext);
 
   if (!isWishlistOpen) return null;
 
@@ -1538,7 +1649,7 @@ function WishlistSidebar() {
     <div className={`wishlist-overlay ${isWishlistOpen ? "active" : ""}`}>
       <div className="wishlist-sidebar">
         <div className="wishlist-header">
-          <h3 className="wishlist-title">❤️ My Wishlist ({wishlistCount})</h3>
+          <h3 className="wishlist-title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', display: 'inline'}}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> My Wishlist ({wishlistCount})</h3>
           <button className="modal-close" onClick={() => setIsWishlistOpen(false)}>
             ×
           </button>
@@ -1546,9 +1657,11 @@ function WishlistSidebar() {
         <div className="wishlist-items">
           {wishlist.length === 0 ? (
             <div className="wishlist-empty">
-              <div className="wishlist-empty-icon">💔</div>
+              <div className="wishlist-empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+              </div>
               <p>Your wishlist is empty</p>
-              <span className="wishlist-empty-hint">Click ❤️ on products you love!</span>
+              <span className="wishlist-empty-hint">Click the heart icon on products you love!</span>
             </div>
           ) : (
             wishlist.map((item) => (
@@ -2204,7 +2317,7 @@ function CheckoutModal() {
                     onClick={() => setPaymentMethod('card')}
                   >
                     <div className="payment-option-header">
-                      <span className="payment-icon">💳</span>
+                      <span className="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
                       <span className="payment-name">บัตรเครดิต / เดบิต</span>
                       <span className="payment-check">{paymentMethod === 'card' ? '✓' : ''}</span>
                     </div>
@@ -2272,7 +2385,7 @@ function CheckoutModal() {
                     onClick={() => setPaymentMethod('promptpay')}
                   >
                     <div className="payment-option-header">
-                      <span className="payment-icon">📱</span>
+                      <span className="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
                       <span className="payment-name">PromptPay QR Code</span>
                       <span className="payment-check">{paymentMethod === 'promptpay' ? '✓' : ''}</span>
                     </div>
@@ -2294,13 +2407,13 @@ function CheckoutModal() {
                     onClick={() => setPaymentMethod('cod')}
                   >
                     <div className="payment-option-header">
-                      <span className="payment-icon">💵</span>
+                      <span className="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
                       <span className="payment-name">ชำระเงินปลายทาง (COD)</span>
                       <span className="payment-check">{paymentMethod === 'cod' ? '✓' : ''}</span>
                     </div>
                     {paymentMethod === 'cod' && (
                       <div className="cod-section">
-                        <p className="cod-info">💡 ชำระเงินสดเมื่อได้รับสินค้า</p>
+                        <p className="cod-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> ชำระเงินสดเมื่อได้รับสินค้า</p>
                         <p className="cod-fee">ค่าบริการ COD: ฿30 (รวมในยอดชำระแล้ว)</p>
                       </div>
                     )}
@@ -2318,8 +2431,8 @@ function CheckoutModal() {
                   ขอบคุณสำหรับการสั่งซื้อ! เราได้ส่งรายละเอียดไปยังอีเมล {formData.email} แล้ว
                 </p>
                 <div className="success-details">
-                  <p>📦 คาดว่าจะจัดส่งภายใน 3-5 วันทำการ</p>
-                  <p>📧 เราจะแจ้งเลขพัสดุให้ทางอีเมล</p>
+                  <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/></svg> คาดว่าจะจัดส่งภายใน 3-5 วันทำการ</p>
+                  <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> เราจะแจ้งเลขพัสดุให้ทางอีเมล</p>
                 </div>
                 <button className="success-btn" onClick={handleClose}>
                   กลับหน้าหลัก
@@ -2331,7 +2444,7 @@ function CheckoutModal() {
           {/* Right: Order Summary */}
           {step !== 3 && (
             <div className="checkout-summary">
-              <h3 className="summary-title">🛒 สรุปคำสั่งซื้อ</h3>
+              <h3 className="summary-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> สรุปคำสั่งซื้อ</h3>
               
               <div className="summary-items">
                 {cart.map((item) => (
@@ -2382,7 +2495,8 @@ function CheckoutModal() {
 
               {shippingCost === 0 && (
                 <div className="free-shipping-badge">
-                  🎉 คุณได้รับฟรีค่าจัดส่ง!
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  คุณได้รับฟรีค่าจัดส่ง!
                 </div>
               )}
 
@@ -2713,7 +2827,7 @@ function SearchModal({ onClose, onSearch }) {
       <div className="search-modal">
         <div className="search-header">
           <form onSubmit={handleSubmit} className="search-form">
-            <span className="search-input-icon">🔍</span>
+            <span className="search-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
             <input
               type="text"
               placeholder="Search products..."
@@ -2767,8 +2881,111 @@ function SearchModal({ onClose, onSearch }) {
 }
 
 // =============================================
-// PRODUCT GALLERY COMPONENT
+// GALLERY PRODUCT CARD COMPONENT (with color selector)
 // =============================================
+function GalleryProductCard({ product, formatPrice, onAddToCart }) {
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const { toggleWishlist, isInWishlist } = useContext(WishlistContext);
+  const { isLoggedIn, openAuthModal } = useContext(AuthContext);
+  
+  const wishlisted = isInWishlist(product.id);
+  
+  // Get current image based on selected color
+  const hasColorVariants = product.colorVariants && product.colorVariants.length > 0;
+  const currentImage = hasColorVariants 
+    ? product.colorVariants[selectedColorIndex].image 
+    : product.image;
+  const currentColorName = hasColorVariants 
+    ? product.colorVariants[selectedColorIndex].name 
+    : product.color;
+
+  const handleAddToCartClick = () => {
+    // Pass the product with current selected color/image
+    onAddToCart({
+      ...product,
+      image: currentImage,
+      selectedColor: currentColorName,
+    });
+  };
+
+  const handleWishlistClick = () => {
+    if (!isLoggedIn) {
+      openAuthModal('menu');
+      return;
+    }
+    toggleWishlist({
+      ...product,
+      selectedColor: currentColorName,
+      image: currentImage,
+    });
+  };
+
+  return (
+    <div className="gallery-card">
+      <div className="gallery-card-image">
+        <img src={currentImage} alt={product.name} />
+        <span className={`category-badge ${product.category}`}>
+          {product.category === "men"
+            ? "Men's"
+            : product.category === "women"
+            ? "Women's"
+            : "Unisex"}
+        </span>
+        {product.tag && (
+          <span className={`gallery-tag ${product.tag.toLowerCase()}`}>
+            {product.tag}
+          </span>
+        )}
+        {/* Wishlist Button */}
+        <button
+          className={`gallery-wishlist ${wishlisted ? 'active' : ''}`}
+          onClick={handleWishlistClick}
+          title={wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button className="quick-add" onClick={handleAddToCartClick}>
+          + Add to Cart
+        </button>
+      </div>
+      <div className="gallery-card-info">
+        <h3 className="gallery-card-name">{product.name}</h3>
+        <p className="gallery-card-model">{product.model}</p>
+        
+        {/* Color Selector - Show for all products with colorVariants */}
+        {hasColorVariants && (
+          <div className="gallery-color-selector">
+            <span className="gallery-color-label">Color: {currentColorName}</span>
+            <div className="gallery-color-options">
+              {product.colorVariants.map((variant, index) => (
+                <button
+                  key={variant.name}
+                  className={`gallery-color-option ${selectedColorIndex === index ? 'active' : ''}`}
+                  style={{ backgroundColor: variant.hex }}
+                  onClick={() => setSelectedColorIndex(index)}
+                  title={variant.name}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        
+        <div className="gallery-card-footer">
+          <span className="gallery-card-price">
+            {formatPrice(product.price)}
+          </span>
+          <span className="gallery-card-stock">
+            In Stock: {product.stock}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================
+// PRODUCT GALLERY COMPONENT
+// ==============================================
 function ProductGallery({ onBack, initialSearchTerm = '', initialCategory = 'all' }) {
   const { addToCart } = useContext(CartContext);
   const [activeFilter, setActiveFilter] = useState(initialCategory);
@@ -2818,12 +3035,7 @@ function ProductGallery({ onBack, initialSearchTerm = '', initialCategory = 'all
     );
   }
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("th-TH", {
-      style: "currency",
-      currency: "THB",
-    }).format(price);
-  };
+  const { formatPrice } = useContext(CurrencyContext);
 
   const handleAddToCartClick = (product) => {
     setSelectedProduct(product);
@@ -2860,7 +3072,7 @@ function ProductGallery({ onBack, initialSearchTerm = '', initialCategory = 'all
 
         <div className="gallery-controls">
           <div className="search-box">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
             <input
               type="text"
               placeholder="Search products..."
@@ -2899,40 +3111,19 @@ function ProductGallery({ onBack, initialSearchTerm = '', initialCategory = 'all
         </div>
 
         <div className="gallery-grid">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="gallery-card">
-              <div className="gallery-card-image">
-                <img src={product.image} alt={product.name} />
-                <span className={`category-badge ${product.category}`}>
-                  {product.category === "men"
-                    ? "Men's"
-                    : product.category === "women"
-                    ? "Women's"
-                    : "Unisex"}
-                </span>
-                <button className="quick-add" onClick={() => handleAddToCartClick(product)}>
-                  + Add to Cart
-                </button>
-              </div>
-              <div className="gallery-card-info">
-                <h3 className="gallery-card-name">{product.name}</h3>
-                <p className="gallery-card-model">{product.model}</p>
-                <div className="gallery-card-footer">
-                  <span className="gallery-card-price">
-                    {formatPrice(product.price)}
-                  </span>
-                  <span className="gallery-card-stock">
-                    In Stock: {product.stock}
-                  </span>
-                </div>
-              </div>
-            </div>
+          {filteredProducts.map((product, index) => (
+            <GalleryProductCard 
+              key={`${product.id}-${index}`} 
+              product={product} 
+              formatPrice={formatPrice}
+              onAddToCart={handleAddToCartClick}
+            />
           ))}
         </div>
 
         {filteredProducts.length === 0 && (
           <div className="no-results">
-            <div className="no-results-icon">🔍</div>
+            <div className="no-results-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
             <h3>No products found</h3>
             <p>Try a different search term or select another category</p>
           </div>
@@ -3225,13 +3416,34 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
         <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
             <button className="mobile-menu-close" onClick={() => setMenuOpen(false)}>×</button>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("home"); setMenuOpen(false); }}>⌂ HOME</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("gallery"); setMenuOpen(false); }}>◈ WOMENS</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("gallery"); setMenuOpen(false); }}>◆ MENS</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("gallery"); setMenuOpen(false); }}>⬡ BRANDS</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("gallery"); setMenuOpen(false); }}>★ FINAL SALE</a>
-            <a href="#about" onClick={() => setMenuOpen(false)}>◉ ABOUT US</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onShowRegistration(); setMenuOpen(false); }}>✉ CONTACT US</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("home"); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              HOME
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("women"); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/><line x1="12" y1="17" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
+              WOMENS
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("men"); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/></svg>
+              MENS
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("all"); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              BRANDS
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("all"); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              FINAL SALE
+            </a>
+            <a href="#about" onClick={() => setMenuOpen(false)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              ABOUT US
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              CONTACT US
+            </a>
           </div>
         </div>
       )}
