@@ -2189,7 +2189,19 @@ function AuthModal() {
                   <p className="user-greeting">Hello, <strong>{user.firstName}!</strong></p>
                   <p className="user-email">{user.email}</p>
                 </div>
+                <button className="auth-btn profile-btn" onClick={() => setAuthMode('profile')}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  View Profile
+                </button>
                 <button className="auth-btn logout-btn" onClick={logout}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
                   Logout
                 </button>
               </>
@@ -2204,6 +2216,77 @@ function AuthModal() {
                 </button>
               </>
             )}
+          </div>
+        )}
+
+        {/* Profile View */}
+        {authMode === 'profile' && isLoggedIn && (
+          <div className="auth-profile">
+            <button className="auth-back" onClick={() => setAuthMode('menu')}>← Back</button>
+            <div className="profile-header">
+              <div className="profile-avatar">
+                {user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase() || ''}
+              </div>
+              <h2 className="profile-name">{user.firstName} {user.lastName}</h2>
+              <p className="profile-email">{user.email}</p>
+            </div>
+            
+            <div className="profile-details">
+              <h3 className="profile-section-title">ข้อมูลส่วนตัว</h3>
+              
+              <div className="profile-item">
+                <span className="profile-label">ชื่อ-นามสกุล</span>
+                <span className="profile-value">{user.firstName} {user.lastName}</span>
+              </div>
+              
+              <div className="profile-item">
+                <span className="profile-label">อีเมล</span>
+                <span className="profile-value">{user.email}</span>
+              </div>
+              
+              {user.phone && (
+                <div className="profile-item">
+                  <span className="profile-label">เบอร์โทรศัพท์</span>
+                  <span className="profile-value">{user.phone}</span>
+                </div>
+              )}
+              
+              {user.address && (
+                <div className="profile-item">
+                  <span className="profile-label">ที่อยู่จัดส่ง</span>
+                  <span className="profile-value">{user.address}</span>
+                </div>
+              )}
+              
+              {user.username && (
+                <div className="profile-item">
+                  <span className="profile-label">Username</span>
+                  <span className="profile-value">{user.username}</span>
+                </div>
+              )}
+              
+              <div className="profile-item">
+                <span className="profile-label">สมาชิกตั้งแต่</span>
+                <span className="profile-value">
+                  {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  }) : 'ไม่ระบุ'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="profile-actions">
+              <button className="auth-btn logout-btn" onClick={logout}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Logout
+              </button>
+            </div>
           </div>
         )}
 

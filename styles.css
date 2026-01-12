@@ -4433,6 +4433,122 @@ body {
   color: var(--text-secondary);
 }
 
+/* Profile Button with Icon */
+.auth-btn.profile-btn,
+.auth-btn.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.auth-btn.profile-btn {
+  background: var(--accent);
+  color: white;
+}
+
+.auth-btn.profile-btn:hover {
+  background: var(--accent-dark);
+}
+
+/* Profile View Styles */
+.auth-profile {
+  padding: 30px 40px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  box-shadow: 0 8px 25px rgba(201, 169, 110, 0.3);
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.profile-email {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.profile-details {
+  margin-bottom: 25px;
+}
+
+.profile-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 15px 0;
+}
+
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.profile-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+  max-width: 60%;
+}
+
+.profile-actions {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-actions .logout-btn {
+  width: 100%;
+  background: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.profile-actions .logout-btn:hover {
+  background: #c0392b;
+}
+
 /* Login Indicator */
 .account-btn.logged-in {
   position: relative;
