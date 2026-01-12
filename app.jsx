@@ -3561,9 +3561,9 @@ function App() {
   return (
     <ThemeProvider>
       <CurrencyProvider>
+      <AuthProvider>
       <CartProvider>
       <WishlistProvider>
-      <AuthProvider>
         <div className="app">
           <NavbarWithPages
             currentPage={currentPage}
@@ -3619,9 +3619,9 @@ function App() {
           <CheckoutModal />
           <Toast />
         </div>
-      </AuthProvider>
       </WishlistProvider>
       </CartProvider>
+      </AuthProvider>
       </CurrencyProvider>
     </ThemeProvider>
   );
