@@ -2905,6 +2905,350 @@ function LiveChatWidget() {
 }
 
 // =============================================
+// AI CHATBOT COMPONENT
+// =============================================
+function AIChatbot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { type: 'bot', text: 'สวัสดีครับ! 🤖 ผมเป็น AI ช่วยเหลือของ MAISON\n\nคุณสามารถถามเกี่ยวกับ:\n• การสั่งซื้อและการจัดส่ง\n• ขนาดและการวัดไซส์\n• การคืนสินค้า\n• สินค้าแนะนำ' }
+  ]);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = React.useRef(null);
+  
+  // FAQ responses
+  const faqResponses = {
+    'ส่ง': { 
+      keywords: ['ส่ง', 'จัดส่ง', 'delivery', 'shipping'],
+      response: '📦 การจัดส่ง:\n\n• ส่งฟรีเมื่อซื้อครบ ฿1,500\n• จัดส่งภายใน 2-3 วันทำการ\n• สามารถติดตามพัสดุได้ทาง SMS/Email\n• รองรับ Kerry, Flash, ไปรษณีย์ไทย'
+    },
+    'ไซส์': {
+      keywords: ['ไซส์', 'size', 'ขนาด', 'วัด'],
+      response: '📏 การเลือกไซส์:\n\n• S: อก 34-36"\n• M: อก 36-38"\n• L: อก 38-40"\n• XL: อก 40-42"\n\nหากไม่แน่ใจ แนะนำให้เลือกไซส์ใหญ่กว่าปกติ 1 ไซส์'
+    },
+    'คืน': {
+      keywords: ['คืน', 'เปลี่ยน', 'return', 'exchange'],
+      response: '🔄 นโยบายการคืนสินค้า:\n\n• คืนได้ภายใน 14 วัน\n• สินค้าต้องอยู่ในสภาพเดิม พร้อมป้ายแท็ก\n• ติดต่อ support@maison.com\n• คืนเงินภายใน 5-7 วันทำการ'
+    },
+    'แนะนำ': {
+      keywords: ['แนะนำ', 'recommend', 'ยอดนิยม', 'best'],
+      response: '⭐ สินค้าแนะนำ:\n\n1. Cropped Relaxed Button-Down - ฿1,990\n2. Lanvin Embroidered - ฿17,147\n3. JADED LONDON JEANS - ฿3,490\n\nกดที่ปุ่ม "Shop Now" เพื่อดูสินค้าเพิ่มเติม!'
+    },
+    'ติดต่อ': {
+      keywords: ['ติดต่อ', 'contact', 'โทร', 'email'],
+      response: '📞 ติดต่อเรา:\n\n• Email: support@maison.com\n• Line: @maison\n• Tel: 02-xxx-xxxx\n\nเปิดให้บริการ 9:00 - 18:00 น. ทุกวัน'
+    },
+    'ชำระ': {
+      keywords: ['จ่าย', 'ชำระ', 'payment', 'บัตร'],
+      response: '💳 ช่องทางชำระเงิน:\n\n• บัตรเครดิต/เดบิต\n• โอนผ่านธนาคาร\n• PromptPay\n• เก็บเงินปลายทาง (COD)\n\nทุกช่องทางปลอดภัย 100%'
+    }
+  };
+  
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+  
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    
+    const userMessage = input.trim();
+    setMessages(prev => [...prev, { type: 'user', text: userMessage }]);
+    setInput('');
+    setIsTyping(true);
+    scrollToBottom();
+    
+    // Simulate AI thinking delay
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+    
+    // Find matching FAQ response
+    let response = '🤔 ขอโทษครับ ผมไม่เข้าใจคำถามนี้\n\nลองถามเกี่ยวกับ:\n• การจัดส่ง\n• ไซส์และขนาด\n• การคืนสินค้า\n• สินค้าแนะนำ\n• วิธีชำระเงิน';
+    
+    const lowerInput = userMessage.toLowerCase();
+    for (const key in faqResponses) {
+      if (faqResponses[key].keywords.some(k => lowerInput.includes(k))) {
+        response = faqResponses[key].response;
+        break;
+      }
+    }
+    
+    setMessages(prev => [...prev, { type: 'bot', text: response }]);
+    setIsTyping(false);
+    scrollToBottom();
+  };
+  
+  return (
+    <>
+      <button 
+        className={`ai-chatbot-btn ${isOpen ? 'active' : ''}`} 
+        onClick={() => setIsOpen(!isOpen)}
+        title="AI Assistant"
+      >
+        🤖
+      </button>
+      
+      {isOpen && (
+        <div className="ai-chatbot-panel">
+          <div className="ai-chatbot-header">
+            <span className="ai-header-title">🤖 MAISON AI Assistant</span>
+            <button className="ai-close-btn" onClick={() => setIsOpen(false)}>×</button>
+          </div>
+          
+          <div className="ai-chatbot-messages">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`ai-message ${msg.type}`}>
+                {msg.text}
+              </div>
+            ))}
+            {isTyping && (
+              <div className="ai-message bot typing">
+                <span className="typing-dots">
+                  <span>.</span><span>.</span><span>.</span>
+                </span>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+          
+          <form className="ai-chatbot-input" onSubmit={handleSend}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="พิมพ์คำถามของคุณ..."
+            />
+            <button type="submit">➤</button>
+          </form>
+        </div>
+      )}
+    </>
+  );
+}
+
+// =============================================
+// 3D PRODUCT VIEWER COMPONENT
+// =============================================
+function Product3DViewer({ images, productName, onClose }) {
+  const [currentAngle, setCurrentAngle] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(true);
+  
+  // Simulate 360 view with multiple angles (using same image for demo)
+  const totalAngles = 12;
+  
+  useEffect(() => {
+    if (autoRotate && !isDragging) {
+      const interval = setInterval(() => {
+        setCurrentAngle(prev => (prev + 1) % totalAngles);
+      }, 200);
+      return () => clearInterval(interval);
+    }
+  }, [autoRotate, isDragging]);
+  
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.clientX);
+    setAutoRotate(false);
+  };
+  
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const delta = e.clientX - startX;
+    if (Math.abs(delta) > 20) {
+      setCurrentAngle(prev => {
+        if (delta > 0) return (prev + 1) % totalAngles;
+        return (prev - 1 + totalAngles) % totalAngles;
+      });
+      setStartX(e.clientX);
+    }
+  };
+  
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX);
+    setAutoRotate(false);
+  };
+  
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    const delta = e.touches[0].clientX - startX;
+    if (Math.abs(delta) > 20) {
+      setCurrentAngle(prev => {
+        if (delta > 0) return (prev + 1) % totalAngles;
+        return (prev - 1 + totalAngles) % totalAngles;
+      });
+      setStartX(e.touches[0].clientX);
+    }
+  };
+  
+  return (
+    <div className="viewer-3d-overlay" onClick={onClose}>
+      <div className="viewer-3d-container" onClick={e => e.stopPropagation()}>
+        <button className="viewer-3d-close" onClick={onClose}>×</button>
+        <h3 className="viewer-3d-title">🔄 360° View: {productName}</h3>
+        
+        <div 
+          className="viewer-3d-canvas"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleMouseUp}
+        >
+          <img 
+            src={images} 
+            alt={productName}
+            style={{ transform: `rotateY(${currentAngle * 30}deg)` }}
+            draggable={false}
+          />
+          <div className="viewer-3d-indicator">
+            <span className="angle-display">{currentAngle * 30}°</span>
+          </div>
+        </div>
+        
+        <div className="viewer-3d-controls">
+          <button 
+            className={`control-btn ${autoRotate ? 'active' : ''}`} 
+            onClick={() => setAutoRotate(!autoRotate)}
+          >
+            {autoRotate ? '⏸ หยุด' : '▶ หมุนอัตโนมัติ'}
+          </button>
+          <p className="viewer-3d-hint">👆 ลากซ้าย-ขวาเพื่อหมุนสินค้า</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================
+// VIRTUAL TRY-ON COMPONENT
+// =============================================
+function VirtualTryOn({ product, onClose }) {
+  const [userImage, setUserImage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [tryOnResult, setTryOnResult] = useState(null);
+  const fileInputRef = React.useRef(null);
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUserImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleTryOn = async () => {
+    if (!userImage) return;
+    
+    setIsProcessing(true);
+    
+    // Simulate AR processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // For demo, we'll show a combined view
+    setTryOnResult({
+      userImage,
+      productImage: product.image
+    });
+    
+    setIsProcessing(false);
+  };
+  
+  return (
+    <div className="try-on-overlay" onClick={onClose}>
+      <div className="try-on-container" onClick={e => e.stopPropagation()}>
+        <button className="try-on-close" onClick={onClose}>×</button>
+        <h3 className="try-on-title">👗 Virtual Try-On</h3>
+        <p className="try-on-product">{product.name}</p>
+        
+        {!tryOnResult ? (
+          <>
+            <div className="try-on-upload-area">
+              {userImage ? (
+                <img src={userImage} alt="Your photo" className="try-on-preview" />
+              ) : (
+                <div 
+                  className="try-on-placeholder"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <span className="upload-icon">📷</span>
+                  <p>คลิกเพื่ออัปโหลดรูปของคุณ</p>
+                  <p className="upload-hint">รูปหน้าตรง ยืนเต็มตัว</p>
+                </div>
+              )}
+            </div>
+            
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+            
+            {userImage && (
+              <div className="try-on-actions">
+                <button 
+                  className="try-on-btn secondary"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  🔄 เปลี่ยนรูป
+                </button>
+                <button 
+                  className="try-on-btn primary"
+                  onClick={handleTryOn}
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? 'กำลังประมวลผล...' : '✨ ลองสวมใส่'}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="try-on-result">
+            <div className="try-on-result-grid">
+              <div className="result-item">
+                <img src={tryOnResult.userImage} alt="You" />
+                <span>คุณ</span>
+              </div>
+              <span className="result-plus">+</span>
+              <div className="result-item">
+                <img src={tryOnResult.productImage} alt="Product" />
+                <span>สินค้า</span>
+              </div>
+            </div>
+            
+            <div className="try-on-preview-result">
+              <p>🎉 ดูเข้ากันดีมาก!</p>
+              <p className="preview-note">* นี่เป็น Demo version - ระบบ AR จริงกำลังพัฒนา</p>
+            </div>
+            
+            <button 
+              className="try-on-btn primary"
+              onClick={() => setTryOnResult(null)}
+            >
+              ลองใหม่
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================
 // STAR RATING COMPONENT
 // =============================================
 function StarRating({ rating, onRatingChange, readonly = false, size = 24 }) {
@@ -5225,6 +5569,7 @@ function App() {
           <ProductCompareModal />
           <CompareFloatingButton />
           <LiveChatWidget />
+          <AIChatbot />
           <Toast />
         </div>
       </WishlistProvider>
