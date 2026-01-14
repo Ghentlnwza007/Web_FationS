@@ -157,7 +157,7 @@ const collections = {
         ],
       },
       {
-        id: 6,                                    // ID ไม่ซ้ำกัน
+        id: 601,                                    // ID ไม่ซ้ำกัน
         name: "Liberty 2 In 1 Detachable Denim Black Midi Dress",                          // ชื่อ
         price: 4560.00,                            // ราคา (บาท)
         model: "Midi Dress",                          // รุ่น
@@ -171,7 +171,7 @@ const collections = {
         ],
       },
       {
-        id: 6,
+        id: 602,
         name: "Woodland Camo Colossus Baggy Jeans",
         price: 4350.34,
         model: "Camo Colossus",
@@ -284,7 +284,7 @@ const collections = {
         ],
       },
       {
-        id: 11,
+        id: 1101,
         name: "Rebel Military Jacket in Khaki",
         price: 3670.87,
         model: "Military Jacket",
@@ -301,7 +301,7 @@ const collections = {
         ],
       },
       {
-        id: 11,
+        id: 1102,
         name: "Sporty Baggy Monster Hoodie",
         price: 5470.87,
         model: "Sporty Baggy",
@@ -317,7 +317,7 @@ const collections = {
         ],
       },
       {
-        id: 11,
+        id: 1103,
         name: "Strike Metal Belt",
         price: 2200.87,
         model: "Strike Metal ",
@@ -441,8 +441,56 @@ const collections = {
 };
 
 // =============================================
-// CONTEXTS
+// ERROR BOUNDARY COMPONENT
 // =============================================
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, errorInfo });
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  }
+
+  handleReload = () => {
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-boundary">
+          <div className="error-boundary-content">
+            <div className="error-icon">⚠️</div>
+            <h1>เกิดข้อผิดพลาด</h1>
+            <p>ขออภัย เกิดปัญหาบางอย่างขึ้น กรุณาลองใหม่อีกครั้ง</p>
+            <button className="error-reload-btn" onClick={this.handleReload}>
+              🔄 โหลดหน้าใหม่
+            </button>
+            {this.state.error && (
+              <details className="error-details">
+                <summary>รายละเอียดข้อผิดพลาด (สำหรับนักพัฒนา)</summary>
+                <pre>{this.state.error.toString()}</pre>
+              </details>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// =============================================
+// CONTEXTS
+// ==============================================
 const CartContext = createContext();
 const ThemeContext = createContext();
 const WishlistContext = createContext();
@@ -1992,24 +2040,25 @@ function CartSidebar() {
             </div>
           ) : (
             cart.map((item) => (
-              <div key={item.id} className="cart-item">
+              <div key={`${item.id}-${item.selectedSize}`} className="cart-item">
                 <div className="cart-item-image">
                   <img src={item.image} alt={item.name} />
                 </div>
                 <div className="cart-item-info">
                   <h4 className="cart-item-name">{item.name}</h4>
+                  <p className="cart-item-size">Size: {item.selectedSize}</p>
                   <p className="cart-item-price">{formatPrice(item.price)}</p>
                   <div className="cart-item-qty">
                     <button
                       className="qty-btn"
-                      onClick={() => updateQuantity(item.id, -1)}
+                      onClick={() => updateQuantity(item.id, item.selectedSize, -1)}
                     >
                       -
                     </button>
                     <span>{item.quantity}</span>
                     <button
                       className="qty-btn"
-                      onClick={() => updateQuantity(item.id, 1)}
+                      onClick={() => updateQuantity(item.id, item.selectedSize, 1)}
                     >
                       +
                     </button>
@@ -2017,7 +2066,7 @@ function CartSidebar() {
                 </div>
                 <button
                   className="cart-item-remove"
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item.id, item.selectedSize)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
@@ -4730,9 +4779,11 @@ function CheckoutModal() {
                     {paymentMethod === 'promptpay' && (
                       <div className="promptpay-section">
                         <div className="qr-placeholder">
-                          <div className="qr-code">
-                            <div className="qr-pattern"></div>
-                          </div>
+                          <img 
+                            src="https://scontent.fbkk4-3.fna.fbcdn.net/v/t1.15752-9/611668838_770002659476648_8793778093247162605_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=109&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHZcyqljRo3wEexKCZLhcYrL3QFaPz4uzYvdAVo_Pi7NuetOgtrAz_KciXkWN5i4mEN42h3oi4dzqm9xaKKlmo1&_nc_ohc=YhQfwfUAgCoQ7kNvwHWLEik&_nc_oc=AdlJMIb9ujWZoJKFlvCd8IfMMe99rvvrnLchH_BO0cwU2o_wDcMLmCUE7w6n88Rvqhk&_nc_ad=z-m&_nc_cid=1483&_nc_zt=23&_nc_ht=scontent.fbkk4-3.fna&oh=03_Q7cD4QHvRfpZrEhmKhkjHBN13WTyo6NF-u8pxzRSwqc3PzIC-Q&oe=698EF370" 
+                            alt="PromptPay QR Code" 
+                            className="promptpay-qr-image"
+                          />
                           <p className="qr-amount">ยอดชำระ: {formatPrice(finalTotal)}</p>
                           <p className="qr-hint">สแกน QR Code เพื่อชำระเงิน</p>
                         </div>
@@ -4813,10 +4864,10 @@ function CheckoutModal() {
                   <span>ค่าจัดส่ง</span>
                   <span>{shippingCost === 0 ? 'ฟรี' : formatPrice(shippingCost)}</span>
                 </div>
-                {discount > 0 && (
+                {totalDiscount > 0 && (
                   <div className="summary-row discount">
                     <span>ส่วนลด</span>
-                    <span>-{formatPrice(discount)}</span>
+                    <span>-{formatPrice(totalDiscount)}</span>
                   </div>
                 )}
                 {paymentMethod === 'cod' && (
@@ -5261,7 +5312,11 @@ function GalleryProductCard({ product, formatPrice, onAddToCart }) {
   return (
     <div className="gallery-card">
       <div className="gallery-card-image">
-        <img src={currentImage} alt={product.name} />
+        <img 
+          src={currentImage} 
+          alt={`${product.name} - ${currentColorName}`} 
+          loading="lazy"
+        />
         <span className={`category-badge ${product.category}`}>
           {product.category === "men"
             ? "Men's"
@@ -5650,7 +5705,7 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
               </div>
             )}
           </div>
-          <button className="nav-icon" title="Search" onClick={onShowSearch}>
+          <button className="nav-icon" title="Search" aria-label="ค้นหาสินค้า" onClick={onShowSearch}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/>
               <line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -5660,6 +5715,7 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
             className="nav-icon wishlist-btn"
             title="Wishlist"
             onClick={() => setIsWishlistOpen(true)}
+            aria-label="รายการโปรด"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -5670,6 +5726,7 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
             className={`nav-icon account-btn ${isLoggedIn ? 'logged-in' : ''}`}
             title={isLoggedIn ? `Hi, ${user.firstName}` : 'Account'}
             onClick={() => openAuthModal('menu')}
+            aria-label={isLoggedIn ? `เมนูผู้ใช้ ${user.firstName}` : 'เข้าสู่ระบบ'}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -5681,6 +5738,7 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
             className="nav-icon cart-btn"
             onClick={() => setIsCartOpen(true)}
             title="Cart"
+            aria-label={`ตะกร้าสินค้า ${cartCount} ชิ้น`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"/>
@@ -5693,6 +5751,7 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
             className="theme-toggle"
             onClick={toggleTheme}
             title="Toggle Theme"
+            aria-label={isDark ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด'}
           />
         </div>
       </nav>
@@ -5803,4 +5862,8 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
 // RENDER APP
 // =============================================
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);
