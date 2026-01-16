@@ -3,9 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAISON - Premium Lifestyle Wear</title>
-    <meta name="description" content="MAISON - แบรนด์แฟชั่นพรีเมี่ยมที่มุ่งเน้นการสร้างสรรค์เสื้อผ้าคุณภาพสูง">
+    
+    <!-- Primary Meta Tags -->
+    <title>MAISON - Premium Lifestyle Wear | แฟชั่นพรีเมี่ยมคุณภาพสูง</title>
+    <meta name="title" content="MAISON - Premium Lifestyle Wear | แฟชั่นพรีเมี่ยมคุณภาพสูง">
+    <meta name="description" content="MAISON - แบรนด์แฟชั่นพรีเมี่ยมที่มุ่งเน้นการสร้างสรรค์เสื้อผ้าคุณภาพสูง ทั้งผู้ชาย ผู้หญิง และ Unisex ด้วยการออกแบบที่เรียบง่ายแต่หรูหรา">
+    <meta name="keywords" content="MAISON, แฟชั่น, เสื้อผ้า, พรีเมี่ยม, Premium Fashion, Lifestyle Wear, เสื้อผ้าผู้ชาย, เสื้อผ้าผู้หญิง, Unisex, Thailand Fashion">
+    <meta name="author" content="MAISON Thailand">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://maison.co.th/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://maison.co.th/">
+    <meta property="og:title" content="MAISON - Premium Lifestyle Wear">
+    <meta property="og:description" content="แบรนด์แฟชั่นพรีเมี่ยมที่มุ่งเน้นการสร้างสรรค์เสื้อผ้าคุณภาพสูง ด้วยการออกแบบที่เรียบง่ายแต่หรูหรา">
+    <meta property="og:image" content="https://maison.co.th/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="th_TH">
+    <meta property="og:site_name" content="MAISON">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://maison.co.th/">
+    <meta name="twitter:title" content="MAISON - Premium Lifestyle Wear">
+    <meta name="twitter:description" content="แบรนด์แฟชั่นพรีเมี่ยมที่มุ่งเน้นการสร้างสรรค์เสื้อผ้าคุณภาพสูง">
+    <meta name="twitter:image" content="https://maison.co.th/images/og-image.jpg">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#c9a96e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MAISON">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "MAISON",
+        "alternateName": "MAISON Thailand",
+        "url": "https://maison.co.th",
+        "logo": "https://maison.co.th/images/logo.png",
+        "description": "แบรนด์แฟชั่นพรีเมี่ยมที่มุ่งเน้นการสร้างสรรค์เสื้อผ้าคุณภาพสูง",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 ถนนสุขุมวิท แขวงคลองตัน",
+            "addressLocality": "เขตคลองเตย",
+            "addressRegion": "กรุงเทพมหานคร",
+            "postalCode": "10110",
+            "addressCountry": "TH"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+66-2-123-4567",
+            "contactType": "customer service",
+            "availableLanguage": ["Thai", "English"]
+        },
+        "sameAs": [
+            "https://www.facebook.com/maisonthailand",
+            "https://www.instagram.com/maisonthailand",
+            "https://twitter.com/maisonthailand"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "MAISON",
+        "url": "https://maison.co.th",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://maison.co.th/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -40,6 +123,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Skip to main content link for keyboard users -->
+    <a href="#main-content" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
     <div id="root"></div>
     <script type="text/babel" src="app.jsx"></script>
 </body>

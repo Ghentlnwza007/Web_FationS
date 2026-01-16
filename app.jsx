@@ -4,6 +4,7 @@
 // =============================================
 
 const { useState, useEffect, createContext, useContext } = React;
+const { createPortal } = ReactDOM;
 
 // =============================================
 // PRODUCT DATA
@@ -129,7 +130,7 @@ const collections = {
       "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/15JANWWECCOM1725_b7eeee80-0a2c-46b7-8113-65b6913bdb0a.jpg",
     products: [
       {
-        id: 5,                                    // ID ไม่ซ้ำกัน
+        id: 201,                                  // แก้ไข ID ไม่ให้ซ้ำกับ men collection
         name: "Mid Blue Slub Colossus Jeans",                          // ชื่อ
         price: 1990.00,                            // ราคา (บาท)
         model: "Colossus Jeans",                          // รุ่น
@@ -1325,6 +1326,8 @@ const saleProductsData = [
 function SizeSelectionModal({ product, onClose, onAddToCart }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const { formatPrice } = useContext(CurrencyContext);
+  const modalRef = React.useRef(null);
+  const firstFocusableRef = React.useRef(null);
   
   // Parse sizes from the product's size string
   const getSizes = () => {
@@ -1343,15 +1346,52 @@ function SizeSelectionModal({ product, onClose, onAddToCart }) {
     }
   };
 
+  // Focus trap and keyboard handlers
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape") onClose();
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      
+      // Focus trap
+      if (e.key === "Tab" && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
     };
-    document.addEventListener("keydown", handleEscape);
+    
+    // Store previous focus
+    const previousFocus = document.activeElement;
+    
+    document.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = "hidden";
+    
+    // Focus first focusable element
+    setTimeout(() => {
+      if (firstFocusableRef.current) {
+        firstFocusableRef.current.focus();
+      }
+    }, 100);
+    
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
+      // Return focus to previous element
+      if (previousFocus) {
+        previousFocus.focus();
+      }
     };
   }, [onClose]);
 
@@ -1366,39 +1406,55 @@ function SizeSelectionModal({ product, onClose, onAddToCart }) {
     }
   };
 
-  return (
-    <div className="size-modal-overlay active" onClick={handleOverlayClick}>
-      <div className="size-modal">
-        <button className="size-modal-close" onClick={onClose}>×</button>
+  // Use createPortal to render modal directly to document.body
+  // This ensures the modal is positioned relative to viewport, not parent containers
+  return createPortal(
+    <div 
+      className="size-modal-overlay active" 
+      onClick={handleOverlayClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="size-modal-title"
+    >
+      <div className="size-modal" ref={modalRef}>
+        <button 
+          className="size-modal-close" 
+          onClick={onClose}
+          aria-label="ปิดหน้าต่างเลือกไซส์"
+          ref={firstFocusableRef}
+        >×</button>
         
         <div className="size-modal-content">
           <div className="size-modal-image">
             <img 
               src={product.images ? product.images[0] : product.image} 
-              alt={product.name} 
+              alt={`รูปภาพสินค้า ${product.name}`} 
             />
           </div>
           
           <div className="size-modal-info">
-            <h3 className="size-modal-title">{product.name}</h3>
+            <h3 className="size-modal-title" id="size-modal-title">{product.name}</h3>
             <p className="size-modal-price">{formatPrice(product.price)}</p>
             <p className="size-modal-stock">In Stock: {product.stock || 0}</p>
             
-            <div className="size-selection">
-              <p className="size-label">เลือกไซส์</p>
-              <div className="size-options">
+            <div className="size-selection" role="group" aria-label="เลือกไซส์สินค้า">
+              <p className="size-label" id="size-group-label">เลือกไซส์</p>
+              <div className="size-options" role="radiogroup" aria-labelledby="size-group-label">
                 {sizes.map((size) => (
                   <button
                     key={size}
                     className={`size-option ${selectedSize === size ? 'selected' : ''}`}
                     onClick={() => setSelectedSize(size)}
+                    role="radio"
+                    aria-checked={selectedSize === size}
+                    aria-label={`ไซส์ ${size}`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
               {!selectedSize && (
-                <p className="size-hint">กรุณาเลือกไซส์ก่อนเพิ่มลงตะกร้า</p>
+                <p className="size-hint" role="alert">กรุณาเลือกไซส์ก่อนเพิ่มลงตะกร้า</p>
               )}
             </div>
             
@@ -1406,13 +1462,15 @@ function SizeSelectionModal({ product, onClose, onAddToCart }) {
               className={`size-add-btn ${!selectedSize ? 'disabled' : ''}`}
               onClick={handleAddToCart}
               disabled={!selectedSize}
+              aria-label={selectedSize ? `เพิ่มสินค้าไซส์ ${selectedSize} ลงตะกร้า` : 'กรุณาเลือกไซส์ก่อน'}
             >
               {selectedSize ? `Add to Cart - ${selectedSize}` : 'Please Select Size'}
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -3644,15 +3702,59 @@ function ReviewModal({ product, onClose }) {
     };
   }, [onClose]);
   
-  return (
-    <div className="review-modal-overlay active" onClick={handleOverlayClick}>
-      <div className="review-modal">
-        <button className="review-modal-close" onClick={onClose}>×</button>
+  // Inline styles for overlay - ensures highest z-index and fixed positioning
+  const overlayStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100000,
+    overflow: 'hidden'
+  };
+  
+  // Inline styles for modal content
+  const modalStyle = {
+    position: 'relative',
+    backgroundColor: '#fff',
+    borderRadius: '16px',
+    maxWidth: '600px',
+    width: '90%',
+    maxHeight: '80vh',
+    overflow: 'auto',
+    padding: '24px',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+  };
+  
+  // Use createPortal to render modal directly to document.body
+  // This ensures the modal is positioned relative to viewport, not parent containers
+  return createPortal(
+    <div className="review-modal-overlay active" style={overlayStyle} onClick={handleOverlayClick}>
+      <div className="review-modal" style={modalStyle}>
+        <button className="review-modal-close" onClick={onClose} style={{
+          position: 'absolute',
+          top: '12px',
+          right: '12px',
+          background: 'none',
+          border: 'none',
+          fontSize: '24px',
+          cursor: 'pointer',
+          color: '#666'
+        }}>×</button>
         
-        <div className="review-modal-header">
-          <img src={product.image || product.images?.[0]} alt={product.name} className="review-product-image" />
-          <div className="review-product-info">
-            <h3>{product.name}</h3>
+        <div className="review-modal-header" style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+          <img 
+            src={product.image || product.images?.[0]} 
+            alt={product.name} 
+            className="review-product-image" 
+            style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }}
+          />
+          <div className="review-product-info" style={{ display: 'flex', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>{product.name}</h3>
           </div>
         </div>
         
@@ -3666,13 +3768,31 @@ function ReviewModal({ product, onClose }) {
         ) : (
           <>
             <ProductReviews productId={product.id} />
-            <div className="review-modal-actions">
+            <div className="review-modal-actions" style={{ marginTop: '20px', textAlign: 'center' }}>
               {isLoggedIn ? (
-                <button className="write-review-btn" onClick={() => setShowForm(true)}>
+                <button className="write-review-btn" onClick={() => setShowForm(true)} style={{
+                  background: 'linear-gradient(135deg, #c9a55a, #dbb978)',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 600
+                }}>
                   ✏️ เขียนรีวิว
                 </button>
               ) : (
-                <button className="write-review-btn" onClick={() => openAuthModal('login')}>
+                <button className="write-review-btn" onClick={() => openAuthModal('login')} style={{
+                  background: 'linear-gradient(135deg, #c9a55a, #dbb978)',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 600
+                }}>
                   เข้าสู่ระบบเพื่อเขียนรีวิว
                 </button>
               )}
@@ -3680,7 +3800,8 @@ function ReviewModal({ product, onClose }) {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -5751,7 +5872,7 @@ function App() {
       <CompareProvider>
       <CartProvider>
       <WishlistProvider>
-        <div className="app">
+        <div className="app" id="main-content" role="main">
           <NavbarWithPages
             currentPage={currentPage}
             onNavigate={navigateTo}
@@ -5842,7 +5963,13 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
       {/* Main Navigation Row */}
       <nav className="main-nav">
         <div className="main-nav-left">
-          <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+          <button 
+            className="menu-btn" 
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="เปิดเมนูหลัก"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
             ☰ <span>MENU</span>
           </button>
         </div>
@@ -5861,6 +5988,9 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
               className="nav-icon currency-btn" 
               title="Currency"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              aria-label={`เปลี่ยนสกุลเงิน ตอนนี้ ${currency}`}
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="listbox"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>
@@ -6003,9 +6133,9 @@ function NavbarWithPages({ currentPage, onNavigate, onNavigateCategory, onShowSe
 
       {/* Mobile Menu Overlay */}
       {menuOpen && (
-        <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
-          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
-            <button className="mobile-menu-close" onClick={() => setMenuOpen(false)}>×</button>
+        <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)} role="dialog" aria-modal="true" aria-label="เมนูหลัก">
+          <div className="mobile-menu" id="mobile-menu" onClick={(e) => e.stopPropagation()} role="navigation">
+            <button className="mobile-menu-close" onClick={() => setMenuOpen(false)} aria-label="ปิดเมนู">×</button>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("home"); setMenuOpen(false); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '12px', verticalAlign: 'middle'}}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               HOME
