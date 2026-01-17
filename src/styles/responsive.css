@@ -1,0 +1,72 @@
+/* =============================================
+   RESPONSIVE - REGISTRATION & GALLERY
+   ============================================= */
+@media (max-width: 768px) {
+  .registration-overlay {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .registration-modal {
+    margin-top: 60px;
+  }
+
+  .registration-header {
+    padding: 30px 25px 25px;
+  }
+
+  .registration-title {
+    font-size: 22px;
+  }
+
+  .registration-form {
+    padding: 25px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .gallery-section {
+    padding: 100px 20px 60px;
+  }
+
+  .gallery-controls {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .search-box {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .filter-buttons {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+  }
+
+  .sort-dropdown {
+    width: 100%;
+  }
+
+  .sort-dropdown select {
+    width: 100%;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+}

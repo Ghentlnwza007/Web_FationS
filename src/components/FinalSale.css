@@ -1,0 +1,228 @@
+/* =============================================
+   FINAL SALE PAGE STYLES
+   ============================================= */
+.final-sale-page {
+  padding: 140px 40px 80px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.sale-page-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  transform: translateX(-5px);
+}
+
+.sale-banner {
+  padding: 40px;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+  border-radius: 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.sale-banner::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotateBg 20s linear infinite;
+}
+
+@keyframes rotateBg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sale-badge {
+  display: inline-block;
+  padding: 10px 30px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+.sale-title {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.sale-subtitle {
+  font-size: 18px;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.sale-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Sale Product Card */
+.sale-product-card {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.sale-product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px var(--shadow);
+}
+
+.sale-product-image {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+}
+
+.sale-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.6s ease;
+}
+
+.sale-product-card:hover .sale-product-image img {
+  transform: scale(1.08);
+}
+
+.sale-discount-tag {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 50px;
+  z-index: 10;
+  animation: bounce 2s infinite;
+}
+
+.sale-add-to-cart {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  z-index: 10;
+  opacity: 0;
+}
+
+.sale-product-card:hover .sale-add-to-cart {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.sale-add-to-cart:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+}
+
+.sale-product-info {
+  padding: 25px;
+}
+
+.sale-product-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.sale-product-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+}
+
+.sale-price-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.sale-original-price {
+  font-size: 16px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.sale-discounted-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .final-sale-page {
+    padding: 120px 20px 60px;
+  }
+  
+  .sale-banner {
+    padding: 30px 20px;
+  }
+  
+  .sale-products-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .sale-product-image {
+    aspect-ratio: 4/5;
+  }
+}

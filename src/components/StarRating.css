@@ -1,0 +1,22 @@
+/* =============================================
+   STAR RATING COMPONENT
+   ============================================= */
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star-rating .star {
+  color: #ddd;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.star-rating .star.filled {
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.star-rating:not(.readonly) .star:hover {
+  transform: scale(1.2);
+}

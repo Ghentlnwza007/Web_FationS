@@ -1,0 +1,32 @@
+/* =============================================
+   PRODUCT ACTIONS (Review Button)
+   ============================================= */
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.product-actions .add-to-cart {
+  flex: 1;
+  margin-top: 0;
+}
+
+.review-btn {
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.review-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}

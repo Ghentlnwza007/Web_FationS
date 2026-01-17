@@ -1,0 +1,233 @@
+/* =============================================
+   SIZE SELECTION MODAL
+   ============================================= */
+.size-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.size-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.size-modal {
+  background: var(--bg-primary);
+  border-radius: 20px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+  margin: auto;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.size-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: none;
+  font-size: 24px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.size-modal-close:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.size-modal-content {
+  display: flex;
+}
+
+.size-modal-image {
+  width: 45%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+}
+
+.size-modal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.size-modal-info {
+  width: 55%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.size-modal-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.size-modal-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.size-modal-stock {
+  font-size: 14px;
+  font-weight: 500;
+  color: #22c55e;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.size-modal-stock::before {
+  content: "●";
+  font-size: 10px;
+}
+
+.size-selection {
+  flex: 1;
+}
+
+.size-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.size-option {
+  min-width: 50px;
+  padding: 12px 20px;
+  border: 2px solid var(--border);
+  background: var(--bg-primary);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.size-option:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+}
+
+.size-option.selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+  transform: scale(1.05);
+}
+
+.size-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.size-add-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.size-add-btn:hover:not(.disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(201, 169, 106, 0.3);
+}
+
+.size-add-btn.disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .size-modal-content {
+    flex-direction: column;
+  }
+
+  .size-modal-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
+
+  .size-modal-info {
+    width: 100%;
+    padding: 25px 20px;
+  }
+
+  .size-modal-title {
+    font-size: 20px;
+  }
+
+  .size-modal-price {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .size-option {
+    padding: 10px 16px;
+  }
+}

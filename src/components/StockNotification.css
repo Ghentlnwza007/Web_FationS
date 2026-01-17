@@ -1,0 +1,75 @@
+/* =============================================
+   STOCK NOTIFICATION
+   ============================================= */
+.stock-notification-form {
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.stock-notification-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.stock-notification-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 15px 0;
+}
+
+.stock-notification-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.stock-notification-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.stock-notification-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stock-notification-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.stock-notification-btn:disabled {
+  opacity: 0.6;
+}
+
+.stock-notification-success {
+  text-align: center;
+  padding: 20px;
+  color: #2ecc71;
+  font-weight: 500;
+}
+
+.stock-notification-error {
+  padding: 10px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 8px;
+  color: #e74c3c;
+  font-size: 13px;
+  margin-bottom: 10px;
+}

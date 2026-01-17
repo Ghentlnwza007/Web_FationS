@@ -1,0 +1,46 @@
+/* =============================================
+   LOYALTY POINTS
+   ============================================= */
+.loyalty-points-display {
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.loyalty-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loyalty-icon {
+  font-size: 32px;
+}
+
+.loyalty-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.loyalty-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.loyalty-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.loyalty-footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.loyalty-hint {
+  font-size: 11px;
+  opacity: 0.8;
+}

@@ -1,0 +1,56 @@
+/* =============================================
+   FLASH SALE TIMER
+   ============================================= */
+.flash-timer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-radius: 12px;
+  color: white;
+}
+
+.flash-timer.expired {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+
+.flash-label {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.timer-blocks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  min-width: 50px;
+}
+
+.timer-number {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.timer-label {
+  font-size: 10px;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.timer-separator {
+  font-size: 24px;
+  font-weight: 700;
+}
