@@ -540,6 +540,101 @@ const collections = {
 };
 
 // =============================================
+// LAZY IMAGE COMPONENT (Performance Optimization)
+// =============================================
+function LazyImage({ src, alt, className = '', style = {}, onClick, onLoad, ...props }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = React.useRef(null);
+
+  useEffect(() => {
+    // Use Intersection Observer for lazy loading
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '100px', // Start loading 100px before entering viewport
+        threshold: 0.01,
+      }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
+
+  const handleImageLoad = (e) => {
+    setIsLoaded(true);
+    if (onLoad) onLoad(e);
+  };
+
+  return (
+    <div
+      ref={imgRef}
+      className={`lazy-image ${isLoaded ? 'loaded' : 'loading'}`}
+      style={{ 
+        position: 'relative',
+        overflow: 'hidden',
+        ...style 
+      }}
+    >
+      {isInView && (
+        <img
+          src={src}
+          alt={alt}
+          className={`${className} ${isLoaded ? 'lazy-fade-in' : ''}`}
+          loading="lazy"
+          decoding="async"
+          onLoad={handleImageLoad}
+          onClick={onClick}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+          {...props}
+        />
+      )}
+      {!isLoaded && (
+        <div 
+          className="lazy-image-placeholder"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span style={{ 
+            fontSize: '24px', 
+            opacity: 0.3,
+            animation: 'pulse 1.5s infinite'
+          }}>
+            📷
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================
 // ERROR BOUNDARY COMPONENT
 // =============================================
 class ErrorBoundary extends React.Component {
@@ -1170,7 +1265,12 @@ function Hero() {
 function CollectionCard({ collectionKey, data, onClick }) {
   return (
     <div className="collection-card" onClick={onClick}>
-      <img src={data.image} alt={data.title} />
+      <img 
+        src={data.image} 
+        alt={data.title}
+        loading="lazy"
+        decoding="async"
+      />
       <div className="collection-info">
         <h3 className="collection-name">{data.title}</h3>
         <p className="collection-desc">{data.description}</p>
@@ -1513,7 +1613,9 @@ function NewArrivalCard({ product }) {
         <div className="new-arrival-image">
           <img 
             src={product.images[currentImageIndex]} 
-            alt={product.name} 
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
           />
           <span className={`arrival-tag ${product.tag.toLowerCase()}`}>
             {product.tag}
@@ -1627,7 +1729,9 @@ function SaleProductCard({ product }) {
         <div className="sale-product-image">
           <img 
             src={product.images[currentImageIndex]} 
-            alt={product.name} 
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
           />
           <span className="sale-discount-tag">-{product.discount}%</span>
           
@@ -1744,6 +1848,8 @@ function About() {
           <img
             src="https://a-static.besthdwallpaper.com/aespa-s-ningning-drama-album-the-giant-vers-shoot-wallpaper-2560x1600-123396_7.jpg"
             alt="About MAISON"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="about-content">
@@ -1796,7 +1902,12 @@ function About() {
             {creators.map((creator) => (
               <div key={creator.id} className="creator-card">
                 <div className="creator-image">
-                  <img src={creator.image} alt={creator.name} />
+                  <img 
+                    src={creator.image} 
+                    alt={creator.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 <div className="creator-info">
                   <h4 className="creator-name">{creator.name}</h4>
@@ -2013,7 +2124,12 @@ function ProductCard({ product }) {
     <>
       <div className="product-card">
         <div className="product-image">
-          <img src={currentImage} alt={product.name} />
+          <img 
+            src={currentImage} 
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+          />
           <span className="product-badge">In Stock: {product.stock}</span>
           <button
             className={`product-wishlist ${wishlisted ? 'active' : ''}`}
@@ -5594,6 +5710,7 @@ function GalleryProductCard({ product, formatPrice, onAddToCart }) {
           src={currentImage} 
           alt={`${product.name} - ${currentColorName}`} 
           loading="lazy"
+          decoding="async"
         />
         <span className={`category-badge ${product.category}`}>
           {product.category === "men"

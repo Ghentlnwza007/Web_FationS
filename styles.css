@@ -72,6 +72,79 @@ body {
 }
 
 /* =============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================= */
+
+/* GPU Acceleration สำหรับ Animated Elements */
+.hero-bg img,
+.hero-bg video,
+.product-card,
+.collection-card,
+.gallery-card,
+.cart-sidebar,
+.wishlist-sidebar,
+.modal,
+.mobile-menu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Content Visibility สำหรับ Sections ที่อยู่ด้านล่าง */
+.featured-section,
+.arrivals-section,
+.product-gallery-section,
+.creator-section,
+.creators-section,
+.footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Contain Property สำหรับ Performance */
+.product-card,
+.collection-card,
+.gallery-card {
+  contain: layout style;
+}
+
+/* Optimize Image Rendering */
+img {
+  content-visibility: auto;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Lazy Load Placeholder Styles */
+.lazy-image {
+  background: var(--bg-tertiary);
+  transition: opacity 0.3s ease;
+}
+
+.lazy-image.loading {
+  opacity: 0.7;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* Smooth Animation สำรับ Lazy Loading */
+.lazy-fade-in {
+  animation: lazyFadeIn 0.4s ease forwards;
+}
+
+@keyframes lazyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================
    ACCESSIBILITY UTILITIES
    ============================================= */
 
