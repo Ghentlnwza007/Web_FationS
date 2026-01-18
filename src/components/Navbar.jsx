@@ -1,7 +1,6 @@
 
-
 import React, { useState, useEffect, useContext } from 'react';
-import { CartContext, ThemeContext, WishlistContext, AuthContext, CurrencyContext } from '../context/Contexts';
+import { CartContext, ThemeContext, WishlistContext, AuthContext, CurrencyContext, OrderContext } from '../context/Contexts';
 import { 
   CurrencyIcon, 
   SearchIcon, 
@@ -24,6 +23,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
   const { toggleTheme, isDark } = useContext(ThemeContext);
   const { wishlistCount, setIsWishlistOpen } = useContext(WishlistContext);
   const { isLoggedIn, openAuthModal, user } = useContext(AuthContext);
+  const { orderCount } = useContext(OrderContext);
   const { currency, toggleCurrency, isDropdownOpen, setIsDropdownOpen } = useContext(CurrencyContext);
 
   useEffect(() => {
@@ -108,6 +108,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           >
             <UserIcon />
             {isLoggedIn && <span className="login-indicator"></span>}
+            {orderCount > 0 && <span className="cart-badge" style={{background: '#ef4444', right: -6, top: -2}}>{orderCount}</span>}
           </button>
           <button
             className="nav-icon cart-btn"
@@ -181,8 +182,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            if (onShowRegistration) onShowRegistration();
-            else onNavigate('contact'); // Fallback usually not used if prop passed
+            onNavigate('contact');
           }}
         >
           CONTACT US
@@ -219,7 +219,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
               <InfoIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
               ABOUT US
             </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); if (onShowRegistration) onShowRegistration(); setMenuOpen(false); }}>
+            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("contact"); setMenuOpen(false); }}>
               <MailIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
               CONTACT US
             </a>
@@ -229,4 +229,3 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
     </header>
   );
 }
-

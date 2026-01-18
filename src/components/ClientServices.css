@@ -1,0 +1,328 @@
+/* ClientServices.css */
+.client-services-container {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.services-header {
+  text-align: center;
+  padding: 180px 20px 120px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,1) 100%), 
+              url('https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2662&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center 30%;
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.services-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  font-weight: 400;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.services-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.3s forwards;
+}
+
+/* Grid Layout */
+.services-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  margin-bottom: 140px;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.6s forwards;
+}
+
+/* Sections */
+.service-section {
+  padding: 0;
+}
+
+.service-section .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 400;
+}
+
+/* Forms - Minimalist Luxury */
+.form-group {
+  margin-bottom: 35px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  transition: color 0.3s ease;
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 15px 0;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  transition: border-color 0.4s ease, background-color 0.3s ease;
+  outline: none;
+  color: #000;
+  border-radius: 0; /* Remove iOS rounded corners */
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-bottom-color: #000;
+}
+
+.form-group:focus-within .form-label {
+  color: #000;
+}
+
+.form-textarea {
+  resize: none;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* Custom Select Dropdown Styling */
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 10px;
+}
+
+.submit-btn {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: 20px 50px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  width: auto;
+  min-width: 250px;
+  margin-top: 20px;
+}
+
+.submit-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Appointment Time Slots */
+.appointment-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.time-slot {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.time-slot:hover {
+  border-color: #000;
+}
+
+.time-slot.selected {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+/* FAQ Accordion - Refined */
+.faq-container {
+  max-width: 900px;
+  margin: 0 auto 120px;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.9s forwards;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 30px 0;
+  font-size: 1.3rem;
+  font-family: 'Playfair Display', serif;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s;
+  color: #1a1a1a;
+}
+
+.faq-question:hover {
+  color: #555;
+}
+
+.faq-icon {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  transition: transform 0.4s ease;
+}
+
+.faq-icon.active {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #666;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.faq-answer-content {
+  padding-bottom: 30px;
+}
+
+.faq-answer.active {
+  max-height: 300px;
+}
+
+/* Locations - Magazine Style */
+.locations-section {
+  padding: 100px 0;
+  border-top: 1px solid #e0e0e0;
+  background-color: #fcfcfc;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 1.2s forwards;
+}
+
+.locations-grid {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.location-item {
+  text-align: center;
+  flex: 1;
+  min-width: 250px;
+}
+
+.location-city {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #000;
+}
+
+.location-address {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .services-title {
+    font-size: 3.5rem;
+  }
+  
+  .services-grid {
+    gap: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .services-header {
+    padding: 120px 20px 60px;
+  }
+  
+  .services-title {
+    font-size: 2.8rem;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 80px;
+  }
+  
+  .locations-grid {
+    gap: 50px;
+    flex-direction: column;
+  }
+  
+  .services-content {
+    padding: 0 20px;
+  }
+}

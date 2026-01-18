@@ -37,7 +37,8 @@ export default function AuthModal() {
     password: '',
     confirmPassword: '',
   });
-  const [registerErrors, setRegisterErrors] = useState({});
+    const [registerErrors, setRegisterErrors] = useState({});
+  const [activeTab, setActiveTab] = useState('info');
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -113,7 +114,7 @@ export default function AuthModal() {
 
   return (
     <div className="auth-overlay" onClick={handleOverlayClick}>
-      <div className="auth-modal">
+      <div className={`auth-modal ${authMode === 'profile' ? 'fullscreen' : ''}`}>
         <button className="modal-close" onClick={closeAuthModal}>×</button>
         
         {/* Menu View */}
@@ -157,103 +158,102 @@ export default function AuthModal() {
           </div>
         )}
 
-        {/* Profile View */}
+        {/* Profile View - Fullscreen Dashboard */}
         {authMode === 'profile' && isLoggedIn && (
-          <div className="auth-profile">
-            <button className="auth-back" onClick={() => setAuthMode('menu')}>← Back</button>
-            <div className="profile-header">
-              <div className="profile-avatar">
-                {user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase() || ''}
+          <>
+            <div className="fullscreen-sidebar">
+              <div className="sidebar-profile">
+                <div className="sidebar-avatar">
+                  {user.firstName?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <h3 className="sidebar-name">{user.firstName} {user.lastName}</h3>
+                <p className="sidebar-email">{user.email}</p>
               </div>
-              <h2 className="profile-name">{user.firstName} {user.lastName}</h2>
-              <p className="profile-email">{user.email}</p>
+              
+              <div className="sidebar-menu">
+                <div 
+                  className={`sidebar-item ${activeTab === 'info' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('info')}
+                >
+                  <span>👤</span> Profile Info
+                </div>
+                <div 
+                  className={`sidebar-item ${activeTab === 'orders' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('orders')}
+                >
+                  <span>📦</span> Order History
+                </div>
+              </div>
+
+               <button className="auth-btn logout-btn" onClick={logout} style={{marginTop: 'auto', borderRadius: 8}}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Sign Out
+               </button>
             </div>
-            
-            <div className="profile-tabs">
-              <button className="profile-tab active" onClick={(e) => {
-                e.target.parentElement.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById('profile-info').style.display = 'block';
-                document.getElementById('profile-orders').style.display = 'none';
-              }}>ข้อมูลส่วนตัว</button>
-              <button className="profile-tab" onClick={(e) => {
-                e.target.parentElement.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById('profile-info').style.display = 'none';
-                document.getElementById('profile-orders').style.display = 'block';
-              }}>ประวัติการสั่งซื้อ</button>
-            </div>
-            
-            <div id="profile-info" className="profile-details">
-              <div className="profile-item">
-                <span className="profile-label">ชื่อ-นามสกุล</span>
-                <span className="profile-value">{user.firstName} {user.lastName}</span>
-              </div>
-              
-              <div className="profile-item">
-                <span className="profile-label">อีเมล</span>
-                <span className="profile-value">{user.email}</span>
-              </div>
-              
-              <div className="profile-item">
-                <span className="profile-label">เบอร์โทรศัพท์</span>
-                <span className="profile-value">{user.phone || 'ไม่ได้ระบุ'}</span>
-              </div>
-              
-              <div className="profile-item">
-                <span className="profile-label">ที่อยู่จัดส่ง</span>
-                <span className="profile-value">{user.address || 'ไม่ได้ระบุ'}</span>
-              </div>
-              
-              {user.username && (
-                <div className="profile-item">
-                  <span className="profile-label">Username</span>
-                  <span className="profile-value">{user.username}</span>
+
+            <div className="fullscreen-content">
+              <button className="modal-close" onClick={() => setAuthMode('menu')} style={{position:'absolute', top:20, right:20, zIndex:100}}>×</button>
+
+              {activeTab === 'info' && (
+                <div className="dashboard-section">
+                  <h2 className="dashboard-title">My Profile</h2>
+                  <div className="profile-details">
+                    <div className="profile-item">
+                      <span className="profile-label">Full Name</span>
+                      <span className="profile-value">{user.firstName} {user.lastName}</span>
+                    </div>
+                    <div className="profile-item">
+                      <span className="profile-label">Email</span>
+                      <span className="profile-value">{user.email}</span>
+                    </div>
+                    <div className="profile-item">
+                      <span className="profile-label">Phone</span>
+                      <span className="profile-value">{user.phone || '-'}</span>
+                    </div>
+                    <div className="profile-item">
+                      <span className="profile-label">Address</span>
+                      <span className="profile-value">{user.address || '-'}</span>
+                    </div>
+
+                    {user.username && (
+                      <div className="profile-item">
+                        <span className="profile-label">Username</span>
+                        <span className="profile-value">{user.username}</span>
+                      </div>
+                    )}
+                    
+                    <button 
+                      className="auth-btn edit-profile-btn" 
+                      onClick={() => setAuthMode('editProfile')}
+                      style={{maxWidth: 300, marginTop: 40}}
+                    >
+                      Edit Information
+                    </button>
+                    
+                     <div className="profile-actions" style={{margin: '20px 0', borderTop:'none'}}>
+                        <button className="auth-btn admin-btn" onClick={() => setAuthMode('admin')} style={{maxWidth: 200, fontSize: 13}}>
+                          Admin Panel
+                        </button>
+                     </div>
+                  </div>
                 </div>
               )}
-              
-              <div className="profile-item">
-                <span className="profile-label">สมาชิกตั้งแต่</span>
-                <span className="profile-value">
-                  {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('th-TH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  }) : 'ไม่ระบุ'}
-                </span>
-              </div>
-              
-              <button className="auth-btn edit-profile-btn" onClick={() => setAuthMode('editProfile')}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                แก้ไขข้อมูล
-              </button>
+
+              {activeTab === 'orders' && (
+                <div className="dashboard-section">
+                  <h2 className="dashboard-title">Order History</h2>
+                  {/* Reuse OrderHistory component */}
+                  <div style={{marginTop: 20}}>
+                     <OrderHistory userId={user.id} />
+                  </div>
+                </div>
+              )}
             </div>
-            
-            <div id="profile-orders" className="profile-orders" style={{display: 'none'}}>
-              <OrderHistory userId={user.id} />
-            </div>
-            
-            <div className="profile-actions">
-              <button className="auth-btn admin-btn" onClick={() => setAuthMode('admin')}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-                Admin Panel
-              </button>
-              <button className="auth-btn logout-btn" onClick={logout}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                  <polyline points="16 17 21 12 16 7"/>
-                  <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-                Logout
-              </button>
-            </div>
-          </div>
+          </>
         )}
 
       {/* Edit Profile View */}

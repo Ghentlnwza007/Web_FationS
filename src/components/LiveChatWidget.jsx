@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/Contexts';
+import { AuthContext, CartContext } from '../context/Contexts';
 import { db, firebase } from '../firebase';
 
 // =============================================
@@ -8,6 +8,7 @@ import { db, firebase } from '../firebase';
 // =============================================
 export default function LiveChatWidget() {
   const { user, isLoggedIn } = useContext(AuthContext);
+  const { isCartOpen } = useContext(CartContext);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -86,6 +87,8 @@ export default function LiveChatWidget() {
       </button>
     );
   }
+
+  if (isCartOpen) return null;
   
   return (
     <>

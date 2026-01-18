@@ -6,7 +6,8 @@ import {
   AuthProvider, 
   CompareProvider, 
   CartProvider, 
-  WishlistProvider 
+  WishlistProvider,
+  OrderProvider
 } from './context/Contexts';
 
 // Components
@@ -32,10 +33,10 @@ import ProductCompareModal from './components/ProductCompareModal';
 
 // Widgets
 import CompareFloatingButton from './components/CompareFloatingButton';
-import LiveChatWidget from './components/LiveChatWidget';
-import AIChatbot from './components/AIChatbot';
+import UnifiedChatWidget from './components/UnifiedChatWidget';
 import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
+import ClientServices from './components/ClientServices';
 
 // =============================================
 // MAIN APP COMPONENT
@@ -71,68 +72,73 @@ function App() {
           <CompareProvider>
             <CartProvider>
               <WishlistProvider>
-                <div className="app" id="main-content" role="main">
-                  <Navbar
-                    currentPage={currentPage}
-                    onNavigate={navigateTo}
-                    onNavigateCategory={navigateToCategory}
-                    onShowSearch={() => setShowSearch(true)}
-                  />
-
-                  {currentPage === "home" && (
-                    <>
-                      <Hero />
-                      <Collections onOpenModal={setActiveModal} />
-                      <NewArrivals />
-                      <About />
-                    </>
-                  )}
-
-                  {currentPage === "gallery" && (
-                    <ProductGallery 
-                      onBack={() => {
-                        setGlobalSearchTerm('');
-                        setGalleryCategory('all');
-                        navigateTo("home");
-                      }}
-                      initialSearchTerm={globalSearchTerm}
-                      initialCategory={galleryCategory}
+                <OrderProvider>
+                  <div className="app" id="main-content" role="main">
+                    <Navbar
+                      currentPage={currentPage}
+                      onNavigate={navigateTo}
+                      onNavigateCategory={navigateToCategory}
+                      onShowSearch={() => setShowSearch(true)}
                     />
-                  )}
 
-                  {currentPage === "sale" && (
-                    <FinalSalePage onBack={() => navigateTo("home")} />
-                  )}
+                    {currentPage === "home" && (
+                      <>
+                        <Hero />
+                        <Collections onOpenModal={setActiveModal} />
+                        <NewArrivals />
+                        <About />
+                      </>
+                    )}
 
-                  <Footer 
-                    onNavigate={navigateTo} 
-                    onNavigateCategory={navigateToCategory}
-                  />
+                    {currentPage === "gallery" && (
+                      <ProductGallery 
+                        onBack={() => {
+                          setGlobalSearchTerm('');
+                          setGalleryCategory('all');
+                          navigateTo("home");
+                        }}
+                        initialSearchTerm={globalSearchTerm}
+                        initialCategory={galleryCategory}
+                      />
+                    )}
 
-                  {activeModal && (
-                    <ProductModal
-                      collectionKey={activeModal}
-                      onClose={() => setActiveModal(null)}
+                    {currentPage === "sale" && (
+                      <FinalSalePage onBack={() => navigateTo("home")} />
+                    )}
+
+                    {currentPage === "contact" && (
+                      <ClientServices />
+                    )}
+
+                    <Footer 
+                      onNavigate={navigateTo} 
+                      onNavigateCategory={navigateToCategory}
                     />
-                  )}
 
-                  {showSearch && (
-                    <SearchModal
-                      onClose={() => setShowSearch(false)}
-                      onSearch={handleGlobalSearch}
-                    />
-                  )}
+                    {activeModal && (
+                      <ProductModal
+                        collectionKey={activeModal}
+                        onClose={() => setActiveModal(null)}
+                      />
+                    )}
 
-                  <CartSidebar />
-                  <WishlistSidebar />
-                  <AuthModal />
-                  <CheckoutModal />
-                  <ProductCompareModal />
-                  <CompareFloatingButton />
-                  <LiveChatWidget />
-                  <AIChatbot />
-                  <Toast />
-                </div>
+                    {showSearch && (
+                      <SearchModal
+                        onClose={() => setShowSearch(false)}
+                        onSearch={handleGlobalSearch}
+                      />
+                    )}
+
+                    <CartSidebar />
+                    <WishlistSidebar />
+                    <AuthModal />
+                    <CheckoutModal onGoHome={() => navigateTo('home')} />
+                    <ProductCompareModal />
+                    <CompareFloatingButton />
+                    <UnifiedChatWidget />
+                    <Toast />
+                  </div>
+                </OrderProvider>
               </WishlistProvider>
             </CartProvider>
           </CompareProvider>

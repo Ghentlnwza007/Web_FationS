@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { CartContext } from '../context/Contexts';
 
 // =============================================
 // AI CHATBOT COMPONENT
 // =============================================
 export default function AIChatbot() {
+  const { isCartOpen } = useContext(CartContext);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { type: 'bot', text: 'สวัสดีครับ! 🤖 ผมเป็น AI ช่วยเหลือของ MAISON\n\nคุณสามารถถามเกี่ยวกับ:\n• การสั่งซื้อและการจัดส่ง\n• ขนาดและการวัดไซส์\n• การคืนสินค้า\n• สินค้าแนะนำ' }
@@ -76,6 +78,8 @@ export default function AIChatbot() {
     scrollToBottom();
   };
   
+  if (isCartOpen) return null;
+
   return (
     <>
       <button 

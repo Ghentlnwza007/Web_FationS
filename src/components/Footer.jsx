@@ -92,7 +92,7 @@ export default function Footer({ onNavigate, onNavigateCategory }) {
           <h4>Support</h4>
           <ul>
             <li>
-              <a href="#contact" onClick={(e) => handleScrollLink(e, 'footer')}>Contact Us</a>
+              <a href="#contact" onClick={(e) => handlePageLink(e, 'contact')}>Contact Us</a>
             </li>
             <li>
               <a href="#faqs">FAQs</a>

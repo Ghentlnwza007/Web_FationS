@@ -344,11 +344,26 @@ export function WishlistProvider({ children }) {
 // CART PROVIDER (Firebase)
 // =============================================
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  // 1. Initialize from LocalStorage
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('maison_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Failed to load cart from local storage", e);
+      return [];
+    }
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
   const { user } = useContext(AuthContext);
+
+  // 2. Persist to LocalStorage whenever cart changes
+  useEffect(() => {
+    localStorage.setItem('maison_cart', JSON.stringify(cart));
+  }, [cart]);
 
   // Load cart from Firestore when user logs in
   useEffect(() => {
@@ -356,18 +371,24 @@ export function CartProvider({ children }) {
       const unsubscribe = db.collection('carts').doc(user.id)
         .onSnapshot((doc) => {
           if (doc.exists) {
-            setCart(doc.data().items || []);
-          } else {
-            setCart([]);
+            // Merge or overwrite strategy? 
+            // For now, let's overwrite local with cloud if cloud exists, 
+            // OR we could merge. Standard behavior often favors cloud.
+            // But if we just refreshed, cloud is SOT for logged in user.
+            const cloudItems = doc.data().items || [];
+            setCart(cloudItems); 
           }
+           // If cloud doc doesn't exist yet, we might want to push local to cloud?
+           // For simplicity and safety, we simply don't overwrite local with empty if cloud is empty unless explicit.
+           // However, keeping standard behavior: User logs in -> they see their account cart.
         }, (error) => {
           console.error("Error loading cart:", error);
         });
       
       return () => unsubscribe();
-    } else {
-      setCart([]);
-    }
+    } 
+    // REMOVED: else { setCart([]); } 
+    // We do NOT want to clear cart if user is guest.
   }, [user?.id]);
 
   // Save cart to Firestore
@@ -538,5 +559,46 @@ export function CompareProvider({ children }) {
     }}>
       {children}
     </CompareContext.Provider>
+  );
+}
+
+// =============================================
+// ORDER PROVIDER (Local Badge)
+// =============================================
+export const OrderContext = createContext();
+
+export function OrderProvider({ children }) {
+  const [orderCount, setOrderCount] = useState(0);
+
+  const calculateOrderCount = () => {
+    try {
+      const savedOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+      // Sum the item quantities
+      const totalItems = savedOrders.reduce((total, order) => {
+        const orderItemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
+        return total + orderItemsCount;
+      }, 0);
+      
+      setOrderCount(totalItems);
+    } catch (e) {
+      console.error("Error calculating order count", e);
+      setOrderCount(0);
+    }
+  };
+
+  useEffect(() => {
+    calculateOrderCount();
+    window.addEventListener('storage', calculateOrderCount);
+    return () => window.removeEventListener('storage', calculateOrderCount);
+  }, []);
+
+  const refreshOrderCount = () => {
+    calculateOrderCount();
+  };
+
+  return (
+    <OrderContext.Provider value={{ orderCount, refreshOrderCount }}>
+      {children}
+    </OrderContext.Provider>
   );
 }
