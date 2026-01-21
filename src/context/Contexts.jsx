@@ -76,6 +76,7 @@ export function AuthProvider({ children }) {
             setUser({
               id: firebaseUser.uid,
               email: firebaseUser.email,
+              role: userDoc.data().role || 'user',
               ...userDoc.data()
             });
           } else {
@@ -84,7 +85,8 @@ export function AuthProvider({ children }) {
               id: firebaseUser.uid,
               email: firebaseUser.email,
               firstName: firebaseUser.displayName?.split(' ')[0] || 'User',
-              lastName: firebaseUser.displayName?.split(' ')[1] || ''
+              lastName: firebaseUser.displayName?.split(' ')[1] || '',
+              role: 'user'
             });
           }
         } catch (error) {
@@ -92,7 +94,8 @@ export function AuthProvider({ children }) {
           setUser({
             id: firebaseUser.uid,
             email: firebaseUser.email,
-            firstName: 'User'
+            firstName: 'User',
+            role: 'user'
           });
         }
       } else {
@@ -122,6 +125,7 @@ export function AuthProvider({ children }) {
         address: userData.address || '',
         otherInfo: userData.otherInfo || '',
         username: userData.username,
+        role: 'user',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
@@ -201,6 +205,7 @@ export function AuthProvider({ children }) {
   };
 
   const isLoggedIn = !!user;
+  const isAdmin = user?.role === 'admin';
 
   const openAuthModal = (mode = 'menu') => {
     setAuthMode(mode);
@@ -223,6 +228,7 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isLoggedIn,
+        isAdmin,
         register,
         login,
         loginWithGoogle,

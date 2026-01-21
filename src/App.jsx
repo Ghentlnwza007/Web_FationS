@@ -21,6 +21,7 @@ import Footer from './components/Footer';
 // Pages/Sections
 import ProductGallery from './components/ProductGallery';
 import FinalSalePage from './components/FinalSalePage';
+import AdminPanel from './components/AdminPanel';
 
 // Modals/Overlays
 import ProductModal from './components/ProductModal';
@@ -37,6 +38,8 @@ import UnifiedChatWidget from './components/UnifiedChatWidget';
 import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import ClientServices from './components/ClientServices';
+import ProtectedRoute from './components/ProtectedRoute';
+import './components/ProtectedRoute.css';
 
 // =============================================
 // MAIN APP COMPONENT
@@ -110,6 +113,12 @@ function App() {
                       <ClientServices />
                     )}
 
+                    {currentPage === "admin" && (
+                      <ProtectedRoute requiredRole="admin">
+                        <AdminPanel onBack={() => navigateTo("home")} />
+                      </ProtectedRoute>
+                    )}
+
                     <Footer 
                       onNavigate={navigateTo} 
                       onNavigateCategory={navigateToCategory}
@@ -131,7 +140,7 @@ function App() {
 
                     <CartSidebar />
                     <WishlistSidebar />
-                    <AuthModal />
+                    <AuthModal onNavigate={navigateTo} />
                     <CheckoutModal onGoHome={() => navigateTo('home')} />
                     <ProductCompareModal />
                     <CompareFloatingButton />

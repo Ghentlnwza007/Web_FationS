@@ -142,3 +142,107 @@
   background: transparent;
   color: var(--text-primary);
 }
+
+/* =============================================
+   NEW STYLES FOR LAYOUT UPDATE
+   ============================================= */
+
+
+/* Color Selector Styles */
+.color-selector {
+  margin-bottom: 20px;
+  background-color: #f8f9fa; /* Gray box background */
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.color-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.color-option {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.active {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent); /* Ring effect */
+  transform: scale(1.1);
+}
+
+/* Checkmark inside active color option */
+.color-option.active::after {
+  content: '';
+  /* We will use an SVG checkmark in JSX, but this is a fallback or alternative if we use CSS solely. 
+     For better control, we will assume an SVG icon is passed in JSX. 
+     If we want purely CSS checkmark: */
+  /* width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px; */
+}
+
+
+/* Action Buttons Layout */
+.product-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.add-to-cart {
+  flex: 1; /* Takes up remaining space */
+  width: auto; /* Override 100% width */
+  margin-top: 0; /* Reset margins if any */
+}
+
+.review-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px; /* Match standard button height */
+  padding: 0 24px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.review-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+}

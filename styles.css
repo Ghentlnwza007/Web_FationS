@@ -914,7 +914,7 @@ textarea:focus-visible {
 }
 
 .btn-primary {
-  background: var(--gradient-accent);
+  background: linear-gradient(135deg, #c9a96e 0%, #e8d5b0 50%, #c9a96e 100%);
   color: #1a1a1a;
   box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
 }
@@ -927,13 +927,13 @@ textarea:focus-visible {
 .btn-outline {
   background: transparent;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
 }
 
 .btn-outline:hover {
-  background: white;
-  color: #1a1a1a;
-  border-color: white;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .scroll-indicator {

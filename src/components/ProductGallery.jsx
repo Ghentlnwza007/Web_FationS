@@ -140,7 +140,6 @@ export default function ProductGallery({ onBack, initialSearchTerm = '', initial
                 onClick={() => setActiveFilter(filter.key)}
               >
                 {filter.label}
-                <span className="filter-count">{filter.count}</span>
               </button>
             ))}
           </div>

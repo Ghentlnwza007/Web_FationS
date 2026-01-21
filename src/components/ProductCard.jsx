@@ -110,7 +110,13 @@ export default function ProductCard({ product }) {
                     style={{ backgroundColor: variant.hex }}
                     onClick={() => setSelectedColorIndex(index)}
                     title={variant.name}
-                  />
+                  >
+                    {selectedColorIndex === index && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    )}
+                  </button>
                 ))}
               </div>
             </div>

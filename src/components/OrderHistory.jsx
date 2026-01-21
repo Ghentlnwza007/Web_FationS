@@ -11,30 +11,29 @@ export default function OrderHistory({ userId }) {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   useEffect(() => {
-    // Load local orders first (immediate feedback)
-    const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
-    
-    // Filter local orders to match current user if logged in, or show all if we want guest persistence
-    // For now, let's show all local orders created on this device as a fallback
-    
     if (userId) {
+      // Real-time listener for Firestore orders
+      // Note: We don't use .orderBy() to avoid requiring a composite index
       const unsubscribe = db.collection('orders')
         .where('userId', '==', userId)
-        .orderBy('createdAt', 'desc')
         .onSnapshot((snapshot) => {
           const cloudOrders = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
           
-          // Merge: Cloud orders take precedence, but add any local orders not in cloud yet
+          // Load local orders INSIDE the callback to get fresh data
+          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+          
+          // Merge: Cloud orders take precedence
           const cloudIds = new Set(cloudOrders.map(o => o.id));
-          const uniqueLocal = localOrders.filter(o => !cloudIds.has(o.id));
+          const uniqueLocal = localOrders
+            .filter(o => o.userId === userId && !cloudIds.has(o.id));
           
           // Sort by date desc
           const allOrders = [...cloudOrders, ...uniqueLocal].sort((a, b) => {
-             const tA = a.createdAt?.seconds || 0;
-             const tB = b.createdAt?.seconds || 0;
+             const tA = a.createdAt?.seconds || a.createdAt?.getTime?.() / 1000 || 0;
+             const tB = b.createdAt?.seconds || b.createdAt?.getTime?.() / 1000 || 0;
              return tB - tA;
           });
 
@@ -44,12 +43,14 @@ export default function OrderHistory({ userId }) {
           console.error("Error loading orders:", error);
           setLoading(false);
           // Fallback to local only on error
-          setOrders(localOrders);
+          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+          setOrders(localOrders.filter(o => o.userId === userId));
         });
       
       return () => unsubscribe();
     } else {
         // Guest mode: show only local orders
+        const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
         setOrders(localOrders);
         setLoading(false);
     }
@@ -73,8 +74,24 @@ export default function OrderHistory({ userId }) {
     return 'pending';
   };
 
-  const handleAction = (action, orderId) => {
-    alert(`${action} functionality coming soon for Order #${orderId.slice(-6)}`);
+  const handleAction = async (action, orderId) => {
+    if (action === 'Cancel Order') {
+      if (window.confirm('ต้องการยกเลิกคำสั่งซื้อนี้หรือไม่?')) {
+        try {
+          await db.collection('orders').doc(orderId).update({ status: 'cancelled' });
+          setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
+        } catch (err) {
+          console.error('Error cancelling order:', err);
+          alert('ไม่สามารถยกเลิกคำสั่งซื้อได้');
+        }
+      }
+    } else if (action === 'Track Package') {
+      // Show tracking modal or info
+      const order = orders.find(o => o.id === orderId);
+      alert(`📦 Order #${orderId.slice(-6).toUpperCase()}\n\nสถานะ: ${order?.status || 'pending'}\n\nติดตามพัสดุผ่านทาง Kerry Express หรือ Thailand Post`);
+    } else {
+      alert(`${action} - ระบบกำลังพัฒนา`);
+    }
   };
 
   // Load demo orders from local storage on mount
@@ -109,30 +126,34 @@ export default function OrderHistory({ userId }) {
       localStorage.setItem('demo_orders', JSON.stringify([newOrder, ...existingDemo]));
   };
 
+  const getStatusInThai = (status) => {
+    switch (status) {
+      case 'pending': return 'รอชำระ';
+      case 'paid': return 'ชำระแล้ว';
+      case 'processing': return 'ชำระแล้ว';
+      case 'shipped': return 'กำลังจัดส่ง';
+      case 'delivered': return 'ส่งแล้ว';
+      case 'cancelled': return 'ยกเลิก';
+      default: return status;
+    }
+  };
+
   if (loading) {
-    return <div style={{padding:40, textAlign:'center'}}>Loading orders...</div>;
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIcon}>⏳</div>
+        <h3>กำลังโหลดประวัติคำสั่งซื้อ...</h3>
+        <p>กรุณารอสักครู่</p>
+      </div>
+    );
   }
 
   if (orders.length === 0) {
     return (
       <div className={styles.emptyState}>
-        <div className={styles.emptyIcon}>📦</div>
-        <h3>No orders yet</h3>
-        <p>Start shopping to see your orders here.</p>
-        <button 
-            onClick={handleDemoOrder}
-            style={{
-                marginTop: 20,
-                padding: '10px 20px',
-                background: '#f0f0f0',
-                border: 'none',
-                borderRadius: 4,
-                cursor: 'pointer',
-                fontSize: 13
-            }}
-        >
-            View Demo Order
-        </button>
+        <div className={styles.emptyIcon}>✨</div>
+        <h3>ยังไม่มีประวัติการสั่งซื้อ</h3>
+        <p>เมื่อคุณสั่งซื้อสินค้า ประวัติจะแสดงที่นี่</p>
       </div>
     );
   }
@@ -146,13 +167,13 @@ export default function OrderHistory({ userId }) {
             <div className={styles.orderId}>
               <span style={{fontWeight: 'bold'}}>Order #{order.id.slice(-8).toUpperCase()}</span>
               <span className={styles.orderDate}>
-                {order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('en-GB', {
+                {order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('th-TH', {
                   day: 'numeric', month: 'short', year: 'numeric'
                 }) : 'Date N/A'}
               </span>
             </div>
             <div className={`${styles.statusBadge} ${styles[`status_${order.status || 'pending'}`]}`}>
-              {order.status || 'Pending'}
+              {getStatusInThai(order.status || 'pending')}
             </div>
           </div>
 
@@ -175,16 +196,16 @@ export default function OrderHistory({ userId }) {
                {['pending', 'processing', 'shipped', 'delivered'].map((step, idx) => {
                   const status = getStepStatus(order.status, step);
                   const labels = {
-                      pending: 'Placed',
-                      processing: 'Processing',
-                      shipped: 'Shipped',
-                      delivered: 'Delivered'
+                      pending: 'รอชำระ',
+                      processing: 'ชำระแล้ว',
+                      shipped: 'กำลังจัดส่ง',
+                      delivered: 'ส่งแล้ว'
                   };
                   const icons = {
-                      pending: '✓',
-                      processing: '⚙️',
+                      pending: '🕒',
+                      processing: '💰',
                       shipped: '🚚',
-                      delivered: '🏡'
+                      delivered: '✅'
                   };
 
                   return (
@@ -202,7 +223,7 @@ export default function OrderHistory({ userId }) {
           {/* ACTIONS FOOTER */}
           <div className={styles.footer}>
             <div className={styles.total}>
-               Total: {formatPrice(order.total)}
+               ยอดรวม: {formatPrice(order.total)}
             </div>
             <div className={styles.actions}>
                {(order.status === 'pending' || order.status === 'processing') && (
@@ -210,7 +231,7 @@ export default function OrderHistory({ userId }) {
                       className={`${styles.actionBtn} ${styles.btnDanger}`}
                       onClick={() => handleAction('Cancel Order', order.id)}
                    >
-                      Cancel Order
+                      ยกเลิกคำสั่งซื้อ
                    </button>
                )}
                {order.status === 'delivered' && (
@@ -218,14 +239,14 @@ export default function OrderHistory({ userId }) {
                       className={`${styles.actionBtn} ${styles.btnOutline}`}
                       onClick={() => handleAction('Return Item', order.id)}
                    >
-                      Return / Exchange
+                      คืนสินค้า / เปลี่ยนสินค้า
                    </button>
                )}
                <button 
-                  className={`${styles.actionBtn} ${styles.btnOutline}`}
-                  onClick={() => alert(`Tracking details for #${order.id}`)}
+                  className={`${styles.actionBtn} ${styles.btnPrimary}`}
+                  onClick={() => handleAction('Track Package', order.id)}
                >
-                  Track Package
+                  🚚 ติดตามพัสดุ
                </button>
             </div>
           </div>

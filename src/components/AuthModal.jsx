@@ -9,10 +9,11 @@ import AdminPanel from './AdminPanel';
 // =============================================
 // AUTH MODAL COMPONENT
 // =============================================
-export default function AuthModal() {
+export default function AuthModal({ onNavigate }) {
   const {
     user,
     isLoggedIn,
+    isAdmin,
     register,
     login,
     loginWithGoogle,
@@ -234,11 +235,16 @@ export default function AuthModal() {
                       Edit Information
                     </button>
                     
-                     <div className="profile-actions" style={{margin: '20px 0', borderTop:'none'}}>
-                        <button className="auth-btn admin-btn" onClick={() => setAuthMode('admin')} style={{maxWidth: 200, fontSize: 13}}>
-                          Admin Panel
+                    {isAdmin && (
+                      <div className="profile-actions" style={{margin: '20px 0', borderTop:'none'}}>
+                        <button className="auth-btn admin-btn" onClick={() => {
+                          if (onNavigate) onNavigate('admin');
+                          closeAuthModal();
+                        }} style={{maxWidth: 200, fontSize: 13}}>
+                          🔧 Admin Panel
                         </button>
-                     </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -273,8 +279,8 @@ export default function AuthModal() {
           }} />
         )}
 
-        {/* Admin View */}
-        {authMode === 'admin' && isLoggedIn && (
+        {/* Admin View - Only for admins */}
+        {authMode === 'admin' && isLoggedIn && isAdmin && (
           <AdminPanel onBack={() => setAuthMode('profile')} />
         )}
 

@@ -22,7 +22,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
   const { cartCount, setIsCartOpen } = useContext(CartContext);
   const { toggleTheme, isDark } = useContext(ThemeContext);
   const { wishlistCount, setIsWishlistOpen } = useContext(WishlistContext);
-  const { isLoggedIn, openAuthModal, user } = useContext(AuthContext);
+  const { isLoggedIn, isAdmin, openAuthModal, user } = useContext(AuthContext);
   const { orderCount } = useContext(OrderContext);
   const { currency, toggleCurrency, isDropdownOpen, setIsDropdownOpen } = useContext(CurrencyContext);
 
@@ -188,6 +188,18 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           CONTACT US
         </a>
         <a href="#faq" onClick={(e) => { e.preventDefault(); onNavigate("home"); setTimeout(() => document.getElementById("faq").scrollIntoView(), 100); }}>FAQ</a>
+        {isAdmin && (
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate("admin");
+            }}
+            className="admin-link"
+          >
+            🔧 ADMIN
+          </a>
+        )}
       </nav>
 
       {/* Mobile Menu Overlay */}
@@ -223,6 +235,12 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
               <MailIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
               CONTACT US
             </a>
+            {isAdmin && (
+              <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("admin"); setMenuOpen(false); }} className="admin-link">
+                <span style={{marginRight: '12px', verticalAlign: 'middle'}}>🔧</span>
+                ADMIN PANEL
+              </a>
+            )}
           </div>
         </div>
       )}

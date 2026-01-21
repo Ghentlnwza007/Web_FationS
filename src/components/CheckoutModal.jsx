@@ -152,6 +152,8 @@ export default function CheckoutModal({ onGoHome }) {
     const orderData = {
         id: newOrderNumber,
         userId: user?.id || 'guest',
+        customerName: `${formData.firstName} ${formData.lastName}`,
+        customerEmail: formData.email,
         items: cart,
         total: finalTotal,
         status: 'pending',

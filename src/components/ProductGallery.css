@@ -121,22 +121,7 @@
   color: white;
 }
 
-.filter-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 8px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
-  font-size: 11px;
-  font-weight: 600;
-}
 
-.filter-btn.active .filter-count {
-  background: rgba(255, 255, 255, 0.2);
-}
 
 .sort-dropdown select {
   padding: 16px 40px 16px 20px;
@@ -298,6 +283,135 @@
   background: var(--bg-tertiary);
   border-radius: 50px;
 }
+
+/* =============================================
+   NEW GALLERY CARD STYLES
+   ============================================= */
+
+/* Color Selector */
+.gallery-color-selector {
+  margin-bottom: 20px;
+  background-color: #f8f9fa; /* Gray box */
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.gallery-color-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.gallery-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gallery-color-option {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-color-option:hover {
+  transform: scale(1.1);
+}
+
+.gallery-color-option.active {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent); /* Ring effect */
+  transform: scale(1.1);
+}
+
+
+/* Product Details List */
+.gallery-details {
+  list-style: none;
+  margin-bottom: 15px;
+  padding: 15px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.gallery-details li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.gallery-detail-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.gallery-detail-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Actions */
+.gallery-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.gallery-add-cart {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: 1px solid var(--text-primary);
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.gallery-add-cart:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.gallery-review-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gallery-review-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--text-primary);
+}
+
 
 .no-results {
   text-align: center;
