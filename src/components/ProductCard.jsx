@@ -94,57 +94,20 @@ export default function ProductCard({ product }) {
               <ShareButtons product={{...product, image: currentImage}} />
             </div>
           )}
+          {/* Add to Cart Overlay - Shows on Hover */}
+          <div className="product-hover-overlay">
+            <button className="add-to-cart-overlay" onClick={handleAddToCartClick}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Add to Cart
+            </button>
+          </div>
         </div>
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
-          
-          {/* Color Selector */}
-          {hasColorVariants && (
-            <div className="color-selector">
-              <span className="color-label">Color: {currentColorName}</span>
-              <div className="color-options">
-                {product.colorVariants.map((variant, index) => (
-                  <button
-                    key={variant.name}
-                    className={`color-option ${selectedColorIndex === index ? 'active' : ''}`}
-                    style={{ backgroundColor: variant.hex }}
-                    onClick={() => setSelectedColorIndex(index)}
-                    title={variant.name}
-                  >
-                    {selectedColorIndex === index && (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          <ul className="product-details">
-            <li>
-              <span className="detail-label">Model</span>
-              <span className="detail-value">{product.model}</span>
-            </li>
-            <li>
-              <span className="detail-label">Size</span>
-              <span className="detail-value">{product.size}</span>
-            </li>
-            <li>
-              <span className="detail-label">Material</span>
-              <span className="detail-value">{product.material}</span>
-            </li>
-          </ul>
           <div className="product-price">{formatPrice(product.price)}</div>
-          <div className="product-actions">
-            <button className="add-to-cart" onClick={handleAddToCartClick}>
-              Add to Cart
-            </button>
-            <button className="review-btn" onClick={() => setShowReviewModal(true)} title="รีวิวสินค้า">
-              ⭐ Reviews
-            </button>
-          </div>
         </div>
       </div>
       

@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db, firebase } from '../firebase';
 
 // =============================================
-// ADMIN ADD PRODUCT FORM COMPONENT
+// ADMIN ADD/EDIT PRODUCT FORM COMPONENT
 // =============================================
-export default function AdminAddProduct({ onBack, onSuccess }) {
+export default function AdminAddProduct({ onBack, onSuccess, editingProduct }) {
+  const isEditMode = !!editingProduct;
+  
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -21,6 +23,24 @@ export default function AdminAddProduct({ onBack, onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  
+  // Populate form when editing
+  useEffect(() => {
+    if (editingProduct) {
+      setFormData({
+        name: editingProduct.name || '',
+        price: String(editingProduct.price || ''),
+        model: editingProduct.model || '',
+        size: editingProduct.size || 'S, M, L, XL',
+        material: editingProduct.material || '',
+        color: editingProduct.color || editingProduct.colorVariants?.[0]?.name || '',
+        colorHex: editingProduct.colorVariants?.[0]?.hex || '#3498db',
+        stock: String(editingProduct.stock || '10'),
+        image: editingProduct.image || editingProduct.images?.[0] || '',
+        collection: editingProduct.collection || 'men'
+      });
+    }
+  }, [editingProduct]);
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,32 +71,43 @@ export default function AdminAddProduct({ onBack, onSuccess }) {
         colorVariants: [
           { name: formData.color || 'Default', hex: formData.colorHex || '#888888', image: formData.image }
         ],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
       
-      await db.collection('products').add(productData);
-      
-      setSuccess(true);
-      setFormData({
-        name: '',
-        price: '',
-        model: '',
-        size: 'S, M, L, XL',
-        material: '',
-        color: '',
-        colorHex: '#3498db',
-        stock: '10',
-        image: '',
-        collection: 'men'
-      });
+      if (isEditMode) {
+        // Update existing product
+        const productId = String(editingProduct.id);
+        await db.collection('products').doc(productId).set({
+          ...productData,
+          createdAt: editingProduct.createdAt || firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        setSuccess(true);
+      } else {
+        // Add new product
+        productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('products').add(productData);
+        setSuccess(true);
+        setFormData({
+          name: '',
+          price: '',
+          model: '',
+          size: 'S, M, L, XL',
+          material: '',
+          color: '',
+          colorHex: '#3498db',
+          stock: '10',
+          image: '',
+          collection: 'men'
+        });
+      }
       
       setTimeout(() => {
         setSuccess(false);
         if (onSuccess) onSuccess();
       }, 2000);
     } catch (err) {
-      console.error("Error adding product:", err);
-      setError('เกิดข้อผิดพลาดในการเพิ่มสินค้า');
+      console.error("Error saving product:", err);
+      setError(isEditMode ? 'เกิดข้อผิดพลาดในการแก้ไขสินค้า' : 'เกิดข้อผิดพลาดในการเพิ่มสินค้า');
     }
     
     setSubmitting(false);
@@ -85,10 +116,10 @@ export default function AdminAddProduct({ onBack, onSuccess }) {
   return (
     <div className="admin-add-product">
       <button className="auth-back" onClick={onBack}>← กลับ</button>
-      <h2 className="admin-title">➕ เพิ่มสินค้าใหม่</h2>
+      <h2 className="admin-title">{isEditMode ? '✏️ แก้ไขสินค้า' : '➕ เพิ่มสินค้าใหม่'}</h2>
       
       {error && <div className="admin-error">{error}</div>}
-      {success && <div className="admin-success">✓ เพิ่มสินค้าสำเร็จ!</div>}
+      {success && <div className="admin-success">✓ {isEditMode ? 'แก้ไขสำเร็จ!' : 'เพิ่มสินค้าสำเร็จ!'}</div>}
       
       <form onSubmit={handleSubmit} className="admin-product-form">
         <div className="form-group">
@@ -225,7 +256,7 @@ export default function AdminAddProduct({ onBack, onSuccess }) {
         </div>
         
         <button type="submit" className="admin-submit-btn" disabled={submitting}>
-          {submitting ? 'กำลังเพิ่ม...' : '➕ เพิ่มสินค้า'}
+          {submitting ? 'กำลังบันทึก...' : (isEditMode ? '💾 บันทึกการแก้ไข' : '➕ เพิ่มสินค้า')}
         </button>
       </form>
     </div>
