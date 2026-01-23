@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collections } from '../data/products';
 import ProductCard from './ProductCard';
+import './ProductModal.css';
 
 // =============================================
 // PRODUCT MODAL COMPONENT

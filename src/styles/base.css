@@ -57,6 +57,16 @@
   box-sizing: border-box;
 }
 
+/* Hide scrollbar globally while keeping scroll functionality */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 html {
   scroll-behavior: smooth;
 }

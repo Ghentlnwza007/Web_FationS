@@ -75,20 +75,89 @@ export default function OrderHistory({ userId }) {
   };
 
   const handleAction = async (action, orderId) => {
+    console.log('=== handleAction START ===');
+    console.log('Action:', action);
+    console.log('OrderId:', orderId);
+    
+    const isLocalOrder = orderId.startsWith('DEMO-') || !orderId.includes('-');
+    console.log('isLocalOrder:', isLocalOrder);
+    
     if (action === 'Cancel Order') {
-      if (window.confirm('ต้องการยกเลิกคำสั่งซื้อนี้หรือไม่?')) {
+      console.log('About to show confirm dialog...');
+      const confirmed = window.confirm('ต้องการยกเลิกคำสั่งซื้อนี้หรือไม่?');
+      console.log('Confirm result:', confirmed);
+      
+      if (confirmed) {
+        console.log('User confirmed, proceeding with cancellation...');
         try {
-          await db.collection('orders').doc(orderId).update({ status: 'cancelled' });
+          if (isLocalOrder) {
+            console.log('Updating local storage...');
+            // Update local orders
+            const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+            const updatedLocal = localOrders.map(o => 
+              o.id === orderId ? { ...o, status: 'cancelled' } : o
+            );
+            localStorage.setItem('maison_orders', JSON.stringify(updatedLocal));
+            
+            // Also update demo orders if applicable
+            const demoOrders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
+            const updatedDemo = demoOrders.map(o => 
+              o.id === orderId ? { ...o, status: 'cancelled' } : o
+            );
+            localStorage.setItem('demo_orders', JSON.stringify(updatedDemo));
+            console.log('Local storage updated');
+          } else {
+            console.log('Updating Firestore with orderId:', orderId);
+            // Update Firestore
+            await db.collection('orders').doc(orderId).update({ status: 'cancelled' });
+            console.log('Firestore update successful');
+          }
+          
+          console.log('Updating local state...');
           setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
+          console.log('State updated');
+          alert('✅ ยกเลิกคำสั่งซื้อเรียบร้อยแล้ว');
         } catch (err) {
           console.error('Error cancelling order:', err);
-          alert('ไม่สามารถยกเลิกคำสั่งซื้อได้');
+          console.error('Error details:', err.message, err.code);
+          alert('ไม่สามารถยกเลิกคำสั่งซื้อได้: ' + err.message);
+        }
+      } else {
+        console.log('User cancelled the confirm dialog');
+      }
+    } else if (action === 'Confirm Received') {
+      if (window.confirm('ยืนยันว่าได้รับสินค้าแล้วใช่หรือไม่?')) {
+        try {
+          if (isLocalOrder) {
+            // Update local orders
+            const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+            const updatedLocal = localOrders.map(o => 
+              o.id === orderId ? { ...o, status: 'delivered' } : o
+            );
+            localStorage.setItem('maison_orders', JSON.stringify(updatedLocal));
+            
+            // Also update demo orders if applicable
+            const demoOrders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
+            const updatedDemo = demoOrders.map(o => 
+              o.id === orderId ? { ...o, status: 'delivered' } : o
+            );
+            localStorage.setItem('demo_orders', JSON.stringify(updatedDemo));
+          } else {
+            // Update Firestore
+            await db.collection('orders').doc(orderId).update({ status: 'delivered' });
+          }
+          
+          setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'delivered' } : o));
+          alert('✅ ยืนยันการรับสินค้าเรียบร้อยแล้ว ขอบคุณที่ใช้บริการ MAISON!');
+        } catch (err) {
+          console.error('Error confirming delivery:', err);
+          alert('ไม่สามารถยืนยันการรับสินค้าได้: ' + err.message);
         }
       }
     } else if (action === 'Track Package') {
       // Show tracking modal or info
       const order = orders.find(o => o.id === orderId);
-      alert(`📦 Order #${orderId.slice(-6).toUpperCase()}\n\nสถานะ: ${order?.status || 'pending'}\n\nติดตามพัสดุผ่านทาง Kerry Express หรือ Thailand Post`);
+      alert(`📦 Order #${orderId.slice(-6).toUpperCase()}\n\nสถานะ: ${getStatusInThai(order?.status || 'pending')}\n\nติดตามพัสดุผ่านทาง Kerry Express หรือ Thailand Post`);
     } else {
       alert(`${action} - ระบบกำลังพัฒนา`);
     }
@@ -226,7 +295,8 @@ export default function OrderHistory({ userId }) {
                ยอดรวม: {formatPrice(order.total)}
             </div>
             <div className={styles.actions}>
-               {(order.status === 'pending' || order.status === 'processing') && (
+               {/* Cancel button - only for pending or processing orders */}
+               {(order.status === 'pending' || order.status === 'processing' || order.status === 'paid') && (
                    <button 
                       className={`${styles.actionBtn} ${styles.btnDanger}`}
                       onClick={() => handleAction('Cancel Order', order.id)}
@@ -234,6 +304,8 @@ export default function OrderHistory({ userId }) {
                       ยกเลิกคำสั่งซื้อ
                    </button>
                )}
+               
+               {/* Return button - only for delivered orders */}
                {order.status === 'delivered' && (
                    <button 
                       className={`${styles.actionBtn} ${styles.btnOutline}`}
@@ -242,12 +314,26 @@ export default function OrderHistory({ userId }) {
                       คืนสินค้า / เปลี่ยนสินค้า
                    </button>
                )}
-               <button 
-                  className={`${styles.actionBtn} ${styles.btnPrimary}`}
-                  onClick={() => handleAction('Track Package', order.id)}
-               >
-                  🚚 ติดตามพัสดุ
-               </button>
+               
+               {/* Confirm Received button - only for shipped orders */}
+               {order.status === 'shipped' && (
+                   <button 
+                      className={`${styles.actionBtn} ${styles.btnPrimary}`}
+                      onClick={() => handleAction('Confirm Received', order.id)}
+                   >
+                      ✅ ได้รับสินค้าแล้ว
+                   </button>
+               )}
+               
+               {/* Track Package button - only for shipping or processing orders */}
+               {(order.status === 'shipped' || order.status === 'processing' || order.status === 'paid') && (
+                   <button 
+                      className={`${styles.actionBtn} ${styles.btnOutline}`}
+                      onClick={() => handleAction('Track Package', order.id)}
+                   >
+                      🚚 ติดตามพัสดุ
+                   </button>
+               )}
             </div>
           </div>
         </div>

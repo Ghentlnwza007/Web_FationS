@@ -28,8 +28,9 @@
 
 .new-arrival-image {
   position: relative;
-  height: 320px;
+  aspect-ratio: 3/4;
   overflow: hidden;
+  background: var(--bg-tertiary);
 }
 
 .new-arrival-image img {
@@ -214,10 +215,6 @@
     grid-template-columns: 1fr;
     gap: 20px;
     margin-top: 40px;
-  }
-
-  .new-arrival-image {
-    height: 280px;
   }
 
   .carousel-arrow {

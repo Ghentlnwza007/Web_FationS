@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { collections } from '../data/products';
+import './Collections.css';
 
 // =============================================
 // COLLECTION CARD COMPONENT
@@ -37,7 +38,9 @@ export default function Collections({ onOpenModal }) {
         <div className="section-line" />
       </div>
       <div className="collection-grid">
-        {Object.entries(collections).map(([key, data]) => (
+        {Object.entries(collections)
+          .filter(([key]) => key !== 'sports')
+          .map(([key, data]) => (
           <CollectionCard
             key={key}
             collectionKey={key}

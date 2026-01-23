@@ -157,7 +157,7 @@
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 30px;
 }
 
@@ -176,7 +176,7 @@
 
 .gallery-card-image {
   position: relative;
-  aspect-ratio: 1/1;
+  aspect-ratio: 3/4;
   overflow: hidden;
   background: var(--bg-tertiary);
 }
@@ -561,4 +561,31 @@
 .gallery-tag.hot {
   background: #f39c12;
   color: white;
+}
+
+/* =============================================
+   RESPONSIVE GALLERY GRID
+   ============================================= */
+@media (max-width: 1200px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .gallery-section {
+    padding: 80px 20px 60px;
+  }
 }

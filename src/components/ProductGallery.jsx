@@ -5,6 +5,7 @@ import { db } from '../firebase';
 import { collections } from '../data/products';
 import GalleryProductCard from './GalleryProductCard';
 import SizeSelectionModal from './SizeSelectionModal';
+import './ProductGallery.css';
 
 // =============================================
 // PRODUCT GALLERY COMPONENT

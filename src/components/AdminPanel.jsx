@@ -22,10 +22,62 @@ export default function AdminPanel({ onBack }) {
     totalCustomers: 0
   });
 
+  // Chat Support State
+  const [chats, setChats] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  const unreadChats = chats.filter(c => c.unreadByAdmin).length;
+
   // Load dashboard data
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  // Real-time listener for chats
+  useEffect(() => {
+    const unsubscribe = db.collection('chats')
+      .orderBy('lastMessageAt', 'desc')
+      .onSnapshot((snapshot) => {
+        const chatsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setChats(chatsData);
+      }, (error) => {
+        console.log('Error loading chats:', error);
+      });
+    
+    return () => unsubscribe();
+  }, []);
+
+  // Load messages when chat is selected
+  useEffect(() => {
+    if (!selectedChat) {
+      setChatMessages([]);
+      return;
+    }
+    
+    const unsubscribe = db.collection('chats')
+      .doc(selectedChat.id)
+      .collection('messages')
+      .orderBy('createdAt', 'asc')
+      .onSnapshot((snapshot) => {
+        const msgs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setChatMessages(msgs);
+      });
+    
+    // Mark as read when admin opens chat
+    db.collection('chats').doc(selectedChat.id).update({
+      unreadByAdmin: false
+    }).catch(err => console.log('Error marking as read:', err));
+    
+    return () => unsubscribe();
+  }, [selectedChat?.id]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -273,9 +325,40 @@ export default function AdminPanel({ onBack }) {
     return <span className={`status-badge ${s.class}`}>{s.label}</span>;
   };
 
+  // Send reply to customer
+  const sendReply = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim() || !selectedChat || sendingReply) return;
+    
+    setSendingReply(true);
+    try {
+      await db.collection('chats')
+        .doc(selectedChat.id)
+        .collection('messages')
+        .add({
+          text: replyText.trim(),
+          senderId: 'admin',
+          senderName: 'MAISON Support',
+          isAdmin: true,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      
+      await db.collection('chats').doc(selectedChat.id).update({
+        lastMessage: replyText.trim(),
+        lastMessageAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      
+      setReplyText('');
+    } catch (err) {
+      console.error('Error sending reply:', err);
+    }
+    setSendingReply(false);
+  };
+
   // Menu items
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard' },
+    { id: 'chat', icon: '💬', label: 'Chat Support', badge: unreadChats },
     { id: 'products', icon: '📦', label: 'Products' },
     { id: 'add-product', icon: '➕', label: 'Add Product' },
     { id: 'orders', icon: '🛒', label: 'Orders' },
@@ -298,6 +381,7 @@ export default function AdminPanel({ onBack }) {
               className={`sidebar-item ${activeMenu === item.id ? 'active' : ''}`}
               onClick={() => {
                 setActiveMenu(item.id);
+                setSelectedChat(null);
                 if (item.id === 'products') loadProducts();
                 if (item.id === 'orders') loadOrders();
                 if (item.id === 'dashboard') loadDashboardData();
@@ -305,6 +389,9 @@ export default function AdminPanel({ onBack }) {
             >
               <span className="sidebar-icon">{item.icon}</span>
               <span className="sidebar-label">{item.label}</span>
+              {item.badge > 0 && (
+                <span className="sidebar-badge">{item.badge}</span>
+              )}
             </button>
           ))}
         </nav>
@@ -383,6 +470,84 @@ export default function AdminPanel({ onBack }) {
                   </tbody>
                 </table>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Chat Support View */}
+        {activeMenu === 'chat' && (
+          <div className="chat-support-view">
+            <h1 className="page-title">💬 Chat Support {unreadChats > 0 && <span className="title-badge">{unreadChats} new</span>}</h1>
+            
+            <div className="chat-container">
+              {/* Chat List */}
+              <div className="chat-list">
+                <h3>Conversations</h3>
+                {chats.length === 0 ? (
+                  <div className="empty-state">
+                    <span className="empty-icon">💬</span>
+                    <p>ยังไม่มีข้อความ</p>
+                  </div>
+                ) : (
+                  chats.map(chat => (
+                    <div 
+                      key={chat.id}
+                      className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''} ${chat.unreadByAdmin ? 'unread' : ''}`}
+                      onClick={() => setSelectedChat(chat)}
+                    >
+                      <div className="chat-item-avatar">
+                        {chat.userName?.charAt(0)?.toUpperCase() || '?'}
+                      </div>
+                      <div className="chat-item-info">
+                        <div className="chat-item-name">{chat.userName || 'Guest'}</div>
+                        <div className="chat-item-preview">{chat.lastMessage || 'No messages'}</div>
+                      </div>
+                      {chat.unreadByAdmin && <span className="unread-dot" />}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Chat Detail */}
+              <div className="chat-detail">
+                {!selectedChat ? (
+                  <div className="chat-placeholder">
+                    <span>💬</span>
+                    <p>เลือก Chat เพื่อดูข้อความ</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="chat-detail-header">
+                      <h3>{selectedChat.userName || 'Guest'}</h3>
+                      <span className="chat-email">{selectedChat.userEmail}</span>
+                    </div>
+                    
+                    <div className="chat-messages-container">
+                      {chatMessages.map(msg => (
+                        <div key={msg.id} className={`chat-msg ${msg.isAdmin ? 'admin' : 'user'}`}>
+                          <div className="chat-msg-content">{msg.text}</div>
+                          <div className="chat-msg-time">
+                            {msg.createdAt?.toDate?.()?.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) || ''}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <form className="chat-reply-form" onSubmit={sendReply}>
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="พิมพ์ข้อความตอบกลับ..."
+                        className="chat-reply-input"
+                      />
+                      <button type="submit" className="chat-reply-btn" disabled={sendingReply}>
+                        {sendingReply ? '...' : 'ส่ง'}
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
