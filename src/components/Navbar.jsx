@@ -24,7 +24,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
   const { wishlistCount, setIsWishlistOpen } = useContext(WishlistContext);
   const { isLoggedIn, isAdmin, openAuthModal, user } = useContext(AuthContext);
   const { orderCount } = useContext(OrderContext);
-  const { currency, toggleCurrency, isDropdownOpen, setIsDropdownOpen } = useContext(CurrencyContext);
+  const { currency, toggleCurrency, isDropdownOpen, setIsDropdownOpen, t } = useContext(CurrencyContext);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -44,7 +44,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
-            ☰ <span>MENU</span>
+            ☰ <span>{t('nav.menu')}</span>
           </button>
         </div>
         
@@ -137,7 +137,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             onNavigateCategory("women");
           }}
         >
-          WOMENS+
+          {t('nav.women')}
         </a>
         <a
           href="#"
@@ -146,7 +146,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             onNavigateCategory("men");
           }}
         >
-          MENS+
+          {t('nav.men')}
         </a>
         <a
           href="#"
@@ -155,7 +155,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             onNavigateCategory("unisex");
           }}
         >
-          UNISEX+
+          {t('collection.unisex')}
         </a>
         <a
           href="#"
@@ -165,7 +165,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           }}
           className="sale-link"
         >
-          ◆ FINAL SALE
+          ◆ {t('nav.sale')}
         </a>
         <a
           href="#"
@@ -175,9 +175,9 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           }}
           className="sports-link"
         >
-          ⚡ SPORTS
+          ⚡ {t('collection.sports')}
         </a>
-        <a href="#about" onClick={(e) => { e.preventDefault(); onNavigate("home"); setTimeout(() => document.getElementById("about").scrollIntoView(), 100); }}>ABOUT US</a>
+        <a href="#about" onClick={(e) => { e.preventDefault(); onNavigate("home"); setTimeout(() => document.getElementById("about").scrollIntoView(), 100); }}>{t('nav.about')}</a>
         <a
           href="#"
           onClick={(e) => {
@@ -185,9 +185,9 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             onNavigate('contact');
           }}
         >
-          CONTACT US
+          {t('nav.contact')}
         </a>
-        <a href="#faq" onClick={(e) => { e.preventDefault(); onNavigate("home"); setTimeout(() => document.getElementById("faq").scrollIntoView(), 100); }}>FAQ</a>
+
         {isAdmin && (
           <a
             href="#"
@@ -197,7 +197,7 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             }}
             className="admin-link"
           >
-            🔧 ADMIN
+            🔧 {t('nav.admin')}
           </a>
         )}
       </nav>
@@ -209,36 +209,36 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
             <button className="mobile-menu-close" onClick={() => setMenuOpen(false)} aria-label="ปิดเมนู">×</button>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("home"); setMenuOpen(false); }}>
               <HomeIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              HOME
+              {t('nav.home')}
             </a>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("women"); setMenuOpen(false); }}>
               <WomenIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              WOMENS
+              {t('nav.women')}
             </a>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("men"); setMenuOpen(false); }}>
               <MenIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              MENS
+              {t('nav.men')}
             </a>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigateCategory("all"); setMenuOpen(false); }}>
               <BrandsIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              BRANDS
+              {t('nav.brands')}
             </a>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("sale"); setMenuOpen(false); }}>
               <SaleIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              FINAL SALE
+              {t('nav.sale')}
             </a>
             <a href="#about" onClick={(e) => { e.preventDefault(); onNavigate("home"); setTimeout(() => document.getElementById("about").scrollIntoView(), 100); setMenuOpen(false); }}>
               <InfoIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              ABOUT US
+              {t('nav.about')}
             </a>
             <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("contact"); setMenuOpen(false); }}>
               <MailIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
-              CONTACT US
+              {t('nav.contact')}
             </a>
             {isAdmin && (
               <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("admin"); setMenuOpen(false); }} className="admin-link">
                 <span style={{marginRight: '12px', verticalAlign: 'middle'}}>🔧</span>
-                ADMIN PANEL
+                {t('nav.admin')}
               </a>
             )}
           </div>

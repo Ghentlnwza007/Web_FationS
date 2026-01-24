@@ -7,7 +7,8 @@ import {
   CompareProvider, 
   CartProvider, 
   WishlistProvider,
-  OrderProvider
+  OrderProvider,
+  ProductProvider
 } from './context/Contexts';
 
 // Components
@@ -76,8 +77,9 @@ function App() {
             <CartProvider>
               <WishlistProvider>
                 <OrderProvider>
-                  <div className="app" id="main-content" role="main">
-                    <Navbar
+                  <ProductProvider>
+                    <div className="app" id="main-content" role="main">
+                      <Navbar
                       currentPage={currentPage}
                       onNavigate={navigateTo}
                       onNavigateCategory={navigateToCategory}
@@ -147,6 +149,7 @@ function App() {
                     <UnifiedChatWidget />
                     <Toast />
                   </div>
+                  </ProductProvider>
                 </OrderProvider>
               </WishlistProvider>
             </CartProvider>

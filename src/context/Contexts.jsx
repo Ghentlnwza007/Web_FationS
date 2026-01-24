@@ -2,6 +2,9 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { firebase, auth, db } from '../firebase';
 
+import { collections } from '../data/products';
+import { translations } from '../data/translations';
+
 // =============================================
 // CONTEXT CREATION
 // =============================================
@@ -11,6 +14,55 @@ export const WishlistContext = createContext();
 export const AuthContext = createContext();
 export const CurrencyContext = createContext();
 export const CompareContext = createContext();
+export const ProductContext = createContext();
+export const OrderContext = createContext();
+
+// =============================================
+// PRODUCT PROVIDER (Static + Dynamic)
+// =============================================
+export function ProductProvider({ children }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 1. Static Products
+    const staticProducts = [
+      ...collections.men.products.map((p) => ({ ...p, category: "men" })),
+      ...collections.women.products.map((p) => ({ ...p, category: "women" })),
+      ...collections.unisex.products.map((p) => ({ ...p, category: "unisex" })),
+      ...collections.sports.products.map((p) => ({ ...p, category: "sports" })),
+    ];
+
+    // 2. Realtime Dynamic Products from Firestore
+    const unsubscribe = db.collection('products').onSnapshot((snapshot) => {
+      const dynamicProducts = snapshot.docs.map(doc => ({
+        id: `fs-${doc.id}`, // specific prefix for firestore items if needed, or just use doc.id if unique enough
+        ...doc.data(),
+        category: doc.data().collection || 'unisex',
+        model: doc.data().model || doc.data().name // Ensure model exists for search
+      }));
+
+      // Merge: Dynamic products might duplicate static ones if not careful. 
+      // For now, we assume admin only adds NEW products.
+      // If we wanted to override, we'd keys.
+      
+      setProducts([...staticProducts, ...dynamicProducts]);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error loading products:", error);
+      setProducts(staticProducts); // Fallback to static
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return (
+    <ProductContext.Provider value={{ products, loading }}>
+        {children}
+    </ProductContext.Provider>
+  );
+}
 
 // =============================================
 // CURRENCY PROVIDER
@@ -20,6 +72,9 @@ const EXCHANGE_RATE = 0.029; // 1 THB = 0.029 USD
 export function CurrencyProvider({ children }) {
   const [currency, setCurrency] = useState('THB');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Derived language state
+  const language = currency === 'THB' ? 'th' : 'en';
 
   const formatPrice = (priceInTHB) => {
     if (currency === 'USD') {
@@ -39,6 +94,12 @@ export function CurrencyProvider({ children }) {
     setIsDropdownOpen(false);
   };
 
+  // Translation helper
+  const t = (key) => {
+    if (!translations || !translations[key]) return key;
+    return translations[key][language] || translations[key]['en'] || key;
+  };
+
   return (
     <CurrencyContext.Provider
       value={{
@@ -48,6 +109,8 @@ export function CurrencyProvider({ children }) {
         isDropdownOpen,
         setIsDropdownOpen,
         toggleCurrency,
+        language,
+        t,
       }}
     >
       {children}
@@ -66,45 +129,64 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState('');
 
   // Listen to Firebase auth state changes
+  // Listen to Firebase auth state changes
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+    let unsubscribeFirestore = null;
+
+    const unsubscribeAuth = auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
-        // Get additional user data from Firestore
-        try {
-          const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
-          if (userDoc.exists) {
+        // Subscribe to real-time user data from Firestore
+        // This ensures profile updates are reflected immediately
+        if (unsubscribeFirestore) {
+            unsubscribeFirestore();
+            unsubscribeFirestore = null;
+        }
+
+        unsubscribeFirestore = db.collection('users').doc(firebaseUser.uid)
+          .onSnapshot((doc) => {
+            if (doc.exists) {
+              const userData = doc.data();
+              setUser({
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                role: userData.role || 'user',
+                ...userData
+              });
+            } else {
+              // User exists in Auth but not in Firestore yet
+              setUser({
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                firstName: firebaseUser.displayName?.split(' ')[0] || 'User',
+                lastName: firebaseUser.displayName?.split(' ')[1] || '',
+                role: 'user'
+              });
+            }
+            setLoading(false);
+          }, (error) => {
+            console.error("Error fetching user data:", error);
             setUser({
               id: firebaseUser.uid,
               email: firebaseUser.email,
-              role: userDoc.data().role || 'user',
-              ...userDoc.data()
-            });
-          } else {
-            // User exists in Auth but not in Firestore (e.g., Google sign-in first time)
-            setUser({
-              id: firebaseUser.uid,
-              email: firebaseUser.email,
-              firstName: firebaseUser.displayName?.split(' ')[0] || 'User',
-              lastName: firebaseUser.displayName?.split(' ')[1] || '',
+              firstName: 'User',
               role: 'user'
             });
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setUser({
-            id: firebaseUser.uid,
-            email: firebaseUser.email,
-            firstName: 'User',
-            role: 'user'
+            setLoading(false);
           });
-        }
       } else {
+        if (unsubscribeFirestore) {
+            unsubscribeFirestore();
+            unsubscribeFirestore = null;
+        }
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeFirestore) unsubscribeFirestore();
+    };
   }, []);
 
   const register = async (userData) => {
@@ -571,7 +653,7 @@ export function CompareProvider({ children }) {
 // =============================================
 // ORDER PROVIDER (Local Badge)
 // =============================================
-export const OrderContext = createContext();
+// OrderContext is now created at the top
 
 export function OrderProvider({ children }) {
   const [orderCount, setOrderCount] = useState(0);

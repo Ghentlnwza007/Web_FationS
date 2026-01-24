@@ -1,9 +1,10 @@
-
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { CurrencyContext } from '../context/Contexts';
 import heroFallback from '../assets/images/hero-fallback.jpg';
 
 export default function Hero() {
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const { t } = useContext(CurrencyContext);
 
   return (
     <section className="hero" id="home" aria-label="Welcome to MAISON">
@@ -52,14 +53,14 @@ export default function Hero() {
       </div>
       <div className="hero-overlay" />
       <div className="hero-content">
-        <h1 className="hero-title">MAISON</h1>
-        <p className="hero-subtitle">Premium Lifestyle Wear</p>
+        <h1 className="hero-title">{t('hero.title')}</h1>
+        <p className="hero-subtitle">{t('hero.subtitle')}</p>
         <div className="hero-buttons">
           <a href="#shop" className="btn btn-primary">
-            Shop Now
+            {t('hero.shop_now')}
           </a>
           <a href="#about" className="btn btn-outline">
-            Our Story
+            {t('hero.our_story')}
           </a>
         </div>
       </div>

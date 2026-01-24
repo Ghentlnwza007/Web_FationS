@@ -9,6 +9,10 @@ export default function OrderHistory({ userId }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  
+  // Modal State
+  const [activeModal, setActiveModal] = useState(null); // 'cancel' or 'receive'
+  const [activeOrderId, setActiveOrderId] = useState(null);
 
   useEffect(() => {
     if (userId) {
@@ -19,11 +23,13 @@ export default function OrderHistory({ userId }) {
         .onSnapshot((snapshot) => {
           const cloudOrders = snapshot.docs.map(doc => ({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            source: 'firebase' // Tag as firebase order
           }));
           
           // Load local orders INSIDE the callback to get fresh data
-          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]')
+            .map(o => ({ ...o, source: 'local' })); // Tag as local order
           
           // Merge: Cloud orders take precedence
           const cloudIds = new Set(cloudOrders.map(o => o.id));
@@ -43,14 +49,16 @@ export default function OrderHistory({ userId }) {
           console.error("Error loading orders:", error);
           setLoading(false);
           // Fallback to local only on error
-          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]')
+            .map(o => ({ ...o, source: 'local' }));
           setOrders(localOrders.filter(o => o.userId === userId));
         });
       
       return () => unsubscribe();
     } else {
         // Guest mode: show only local orders
-        const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+        const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]')
+            .map(o => ({ ...o, source: 'local' }));
         setOrders(localOrders);
         setLoading(false);
     }
@@ -64,9 +72,14 @@ export default function OrderHistory({ userId }) {
   };
 
   const getStepStatus = (orderStatus, step) => {
+    // Normalize status from Admin Panel
+    let currentStatus = orderStatus || 'pending';
+    if (currentStatus === 'shipping') currentStatus = 'shipped';
+    if (currentStatus === 'paid') currentStatus = 'processing';
+
     // Simple mapping for demo purposes
     const flow = ['pending', 'processing', 'shipped', 'delivered'];
-    const currentIndex = flow.indexOf(orderStatus || 'pending');
+    const currentIndex = flow.indexOf(currentStatus);
     const stepIndex = flow.indexOf(step);
 
     if (currentIndex > stepIndex) return 'completed';
@@ -75,91 +88,20 @@ export default function OrderHistory({ userId }) {
   };
 
   const handleAction = async (action, orderId) => {
-    console.log('=== handleAction START ===');
-    console.log('Action:', action);
-    console.log('OrderId:', orderId);
-    
-    const isLocalOrder = orderId.startsWith('DEMO-') || !orderId.includes('-');
-    console.log('isLocalOrder:', isLocalOrder);
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
     
     if (action === 'Cancel Order') {
-      console.log('About to show confirm dialog...');
-      const confirmed = window.confirm('ต้องการยกเลิกคำสั่งซื้อนี้หรือไม่?');
-      console.log('Confirm result:', confirmed);
-      
-      if (confirmed) {
-        console.log('User confirmed, proceeding with cancellation...');
-        try {
-          if (isLocalOrder) {
-            console.log('Updating local storage...');
-            // Update local orders
-            const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
-            const updatedLocal = localOrders.map(o => 
-              o.id === orderId ? { ...o, status: 'cancelled' } : o
-            );
-            localStorage.setItem('maison_orders', JSON.stringify(updatedLocal));
-            
-            // Also update demo orders if applicable
-            const demoOrders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
-            const updatedDemo = demoOrders.map(o => 
-              o.id === orderId ? { ...o, status: 'cancelled' } : o
-            );
-            localStorage.setItem('demo_orders', JSON.stringify(updatedDemo));
-            console.log('Local storage updated');
-          } else {
-            console.log('Updating Firestore with orderId:', orderId);
-            // Update Firestore
-            await db.collection('orders').doc(orderId).update({ status: 'cancelled' });
-            console.log('Firestore update successful');
-          }
-          
-          console.log('Updating local state...');
-          setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
-          console.log('State updated');
-          alert('✅ ยกเลิกคำสั่งซื้อเรียบร้อยแล้ว');
-        } catch (err) {
-          console.error('Error cancelling order:', err);
-          console.error('Error details:', err.message, err.code);
-          alert('ไม่สามารถยกเลิกคำสั่งซื้อได้: ' + err.message);
-        }
-      } else {
-        console.log('User cancelled the confirm dialog');
-      }
+      setActiveOrderId(orderId);
+      setActiveModal('cancel');
     } else if (action === 'Confirm Received') {
-      if (window.confirm('ยืนยันว่าได้รับสินค้าแล้วใช่หรือไม่?')) {
-        try {
-          if (isLocalOrder) {
-            // Update local orders
-            const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
-            const updatedLocal = localOrders.map(o => 
-              o.id === orderId ? { ...o, status: 'delivered' } : o
-            );
-            localStorage.setItem('maison_orders', JSON.stringify(updatedLocal));
-            
-            // Also update demo orders if applicable
-            const demoOrders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
-            const updatedDemo = demoOrders.map(o => 
-              o.id === orderId ? { ...o, status: 'delivered' } : o
-            );
-            localStorage.setItem('demo_orders', JSON.stringify(updatedDemo));
-          } else {
-            // Update Firestore
-            await db.collection('orders').doc(orderId).update({ status: 'delivered' });
-          }
-          
-          setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'delivered' } : o));
-          alert('✅ ยืนยันการรับสินค้าเรียบร้อยแล้ว ขอบคุณที่ใช้บริการ MAISON!');
-        } catch (err) {
-          console.error('Error confirming delivery:', err);
-          alert('ไม่สามารถยืนยันการรับสินค้าได้: ' + err.message);
-        }
-      }
+      setActiveOrderId(orderId);
+      setActiveModal('receive');
     } else if (action === 'Track Package') {
-      // Show tracking modal or info
-      const order = orders.find(o => o.id === orderId);
       alert(`📦 Order #${orderId.slice(-6).toUpperCase()}\n\nสถานะ: ${getStatusInThai(order?.status || 'pending')}\n\nติดตามพัสดุผ่านทาง Kerry Express หรือ Thailand Post`);
     } else {
-      alert(`${action} - ระบบกำลังพัฒนา`);
+      setActiveOrderId(orderId);
+      setActiveModal('return');
     }
   };
 
@@ -169,7 +111,7 @@ export default function OrderHistory({ userId }) {
     const savedDemo = localStorage.getItem('demo_orders');
     if (savedDemo) {
         setOrders(prev => {
-            const newOrders = JSON.parse(savedDemo);
+            const newOrders = JSON.parse(savedDemo).map(o => ({ ...o, source: 'local' }));
             const contentIds = new Set(prev.map(o => o.id));
             return [...prev, ...newOrders.filter(o => !contentIds.has(o.id))];
         });
@@ -183,6 +125,7 @@ export default function OrderHistory({ userId }) {
           createdAt: { seconds: Date.now() / 1000 },
           status: 'shipped',
           total: 4590,
+          source: 'local',
           items: [
               { name: 'Oversized Silk Shirt', quantity: 1, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=100&q=80', price: 2500 }
           ]
@@ -199,8 +142,9 @@ export default function OrderHistory({ userId }) {
     switch (status) {
       case 'pending': return 'รอชำระ';
       case 'paid': return 'ชำระแล้ว';
-      case 'processing': return 'ชำระแล้ว';
-      case 'shipped': return 'กำลังจัดส่ง';
+      case 'processing': return 'ชำระแล้ว'; // Both map to paid/processing step
+      case 'shipping': return 'กำลังจัดส่ง';
+      case 'shipped': return 'กำลังจัดส่ง';  // Both map to shipping step
       case 'delivered': return 'ส่งแล้ว';
       case 'cancelled': return 'ยกเลิก';
       default: return status;
@@ -227,6 +171,54 @@ export default function OrderHistory({ userId }) {
     );
   }
 
+  const closeModal = () => {
+    setActiveModal(null);
+    setActiveOrderId(null);
+  };
+
+  const confirmAction = async () => {
+    if (!activeOrderId || !activeModal) return;
+    
+    // Find order
+    const order = orders.find(o => o.id === activeOrderId);
+    if (!order) return;
+    
+    const newStatus = activeModal === 'receive' ? 'delivered' : 'cancelled';
+    const previousOrders = [...orders];
+
+    // Optimistic Update
+    setOrders(orders.map(o => o.id === activeOrderId ? { ...o, status: newStatus } : o));
+    closeModal();
+    
+    try {
+      if (order.source === 'local') {
+          // Update local orders
+          const localOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+          const updatedLocal = localOrders.map(o => 
+            o.id === activeOrderId ? { ...o, status: newStatus } : o
+          );
+          localStorage.setItem('maison_orders', JSON.stringify(updatedLocal));
+          
+          // Also update demo orders
+          const demoOrders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
+          const updatedDemo = demoOrders.map(o => 
+            o.id === activeOrderId ? { ...o, status: newStatus } : o
+          );
+          localStorage.setItem('demo_orders', JSON.stringify(updatedDemo));
+      } else {
+          // Update Firestore
+          await db.collection('orders').doc(activeOrderId).update({ status: newStatus });
+      }
+    } catch (err) {
+      console.error('Error updating order:', err);
+      // Revert if failed
+      setOrders(previousOrders);
+      alert('เกิดข้อผิดพลาด: ' + err.message);
+    }
+  };
+
+  // ... (existing code)
+
   return (
     <div className={styles.container}>
       {orders.map((order) => (
@@ -234,11 +226,11 @@ export default function OrderHistory({ userId }) {
           {/* HEADER */}
           <div className={styles.header}>
             <div className={styles.orderId}>
-              <span style={{fontWeight: 'bold'}}>Order #{order.id.slice(-8).toUpperCase()}</span>
+              <span style={{fontWeight: 'bold'}}>คำสั่งซื้อ #{order.id.slice(-8).toUpperCase()}</span>
               <span className={styles.orderDate}>
                 {order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('th-TH', {
                   day: 'numeric', month: 'short', year: 'numeric'
-                }) : 'Date N/A'}
+                }) : 'ไม่ระบุวันที่'}
               </span>
             </div>
             <div className={`${styles.statusBadge} ${styles[`status_${order.status || 'pending'}`]}`}>
@@ -315,29 +307,71 @@ export default function OrderHistory({ userId }) {
                    </button>
                )}
                
-               {/* Confirm Received button - only for shipped orders */}
-               {order.status === 'shipped' && (
+               {/* Unified Received Button - Visible for processing/shipped/shipping/paid, Disabled unless shipped/shipping */}
+               {(['shipped', 'shipping', 'processing', 'paid'].includes(order.status)) && (
                    <button 
-                      className={`${styles.actionBtn} ${styles.btnPrimary}`}
-                      onClick={() => handleAction('Confirm Received', order.id)}
+                      className={`${styles.actionBtn} ${['shipped', 'shipping'].includes(order.status) ? styles.btnPrimary : styles.btnOutline}`}
+                      onClick={() => ['shipped', 'shipping'].includes(order.status) && handleAction('Confirm Received', order.id)}
+                      disabled={!['shipped', 'shipping'].includes(order.status)}
+                      style={!['shipped', 'shipping'].includes(order.status) ? { opacity: 0.5, cursor: 'not-allowed', borderColor: '#ccc', color: '#ccc' } : {}}
                    >
-                      ✅ ได้รับสินค้าแล้ว
-                   </button>
-               )}
-               
-               {/* Track Package button - only for shipping or processing orders */}
-               {(order.status === 'shipped' || order.status === 'processing' || order.status === 'paid') && (
-                   <button 
-                      className={`${styles.actionBtn} ${styles.btnOutline}`}
-                      onClick={() => handleAction('Track Package', order.id)}
-                   >
-                      🚚 ติดตามพัสดุ
+                      {['shipped', 'shipping'].includes(order.status) ? '✅ ได้รับสินค้าแล้ว' : '🚚 รอจัดส่ง'}
                    </button>
                )}
             </div>
           </div>
         </div>
       ))}
+
+      {/* GENERIC ACTION MODAL */}
+      {activeModal && (
+        <div className={styles.modalOverlay} onClick={(e) => {
+            if(e.target === e.currentTarget) closeModal();
+        }}>
+            <div className={styles.modalContent}>
+                <div className={
+                    activeModal === 'receive' ? styles.receiveIcon : 
+                    activeModal === 'return' ? styles.returnIcon : 
+                    styles.cancelIcon
+                }>
+                    {activeModal === 'receive' ? '✓' : activeModal === 'return' ? '↺' : '!'}
+                </div>
+                <h3 className={styles.cancelTitle}>
+                    {activeModal === 'receive' ? 'ยืนยันการรับสินค้า' : 
+                     activeModal === 'return' ? 'การคืน/เปลี่ยนสินค้า' :
+                     'ยืนยันการยกเลิก'}
+                </h3>
+                <p className={styles.cancelMessage}>
+                    {activeModal === 'receive' 
+                        ? 'คุณได้รับสินค้าและตรวจสอบความเรียบร้อยแล้วใช่หรือไม่?' 
+                        : activeModal === 'return'
+                        ? 'หากต้องการคืนหรือเปลี่ยนสินค้า กรุณาติดต่อฝ่ายบริการลูกค้าผ่านทาง LINE: @MAISON หรือ Facebook Page พร้อมแจ้งหมายเลขคำสั่งซื้อ'
+                        : 'คุณต้องการยกเลิกคำสั่งซื้อนี้ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้'
+                    }
+                </p>
+                <div className={styles.modalActions}>
+                    {activeModal !== 'return' && (
+                        <button className={`${styles.modalBtn} ${styles.btnSecondary}`} onClick={closeModal}>
+                            {activeModal === 'receive' ? 'ยังไม่ได้รับ' : 'ไม่, ฉันเปลี่ยนใจ'}
+                        </button>
+                    )}
+                    <button 
+                        className={`${styles.modalBtn} ${
+                            activeModal === 'receive' ? styles.btnSuccess : 
+                            activeModal === 'return' ? styles.btnInfo :
+                            styles.btnConfirm
+                        }`} 
+                        onClick={activeModal === 'return' ? closeModal : confirmAction}
+                        style={activeModal === 'return' ? {width: '100%'} : {}}
+                    >
+                        {activeModal === 'receive' ? 'ยืนยันการรับสินค้า' : 
+                         activeModal === 'return' ? 'เข้าใจแล้ว' :
+                         'ยืนยันการยกเลิก'}
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 }

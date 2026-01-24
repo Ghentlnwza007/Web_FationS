@@ -1,12 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
-import { collections } from '../data/products';
+import React, { useState, useEffect, useContext } from 'react';
+import { ProductContext } from '../context/Contexts';
 
 // =============================================
 // SEARCH MODAL COMPONENT
 // =============================================
 export default function SearchModal({ onClose, onSearch }) {
   const [searchInput, setSearchInput] = useState('');
+  const { products: allProducts } = useContext(ProductContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,11 +36,8 @@ export default function SearchModal({ onClose, onSearch }) {
   }, [onClose]);
 
   // Combine all products for quick suggestions
-  const allProducts = [
-    ...collections.men.products,
-    ...collections.women.products,
-    ...collections.unisex.products,
-  ];
+  // Products retrieved from Context
+
 
   // Filter suggestions based on input
   const suggestions = searchInput.length > 1

@@ -122,11 +122,11 @@ export default function AuthModal({ onNavigate }) {
         {authMode === 'menu' && (
           <div className="auth-menu">
             <div className="auth-icon">👤</div>
-            <h2 className="auth-title">Welcome to MAISON</h2>
+            <h2 className="auth-title">ยินดีต้อนรับสู่ MAISON</h2>
             {isLoggedIn ? (
               <>
                 <div className="auth-user-info">
-                  <p className="user-greeting">Hello, <strong>{user.firstName}!</strong></p>
+                  <p className="user-greeting">สวัสดีคุณ <strong>{user.firstName}!</strong></p>
                   <p className="user-email">{user.email}</p>
                 </div>
                 <button className="auth-btn profile-btn" onClick={() => setAuthMode('profile')}>
@@ -134,7 +134,7 @@ export default function AuthModal({ onNavigate }) {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  View Profile
+                  ดูข้อมูลส่วนตัว
                 </button>
                 <button className="auth-btn logout-btn" onClick={logout}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -142,17 +142,17 @@ export default function AuthModal({ onNavigate }) {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Logout
+                  ออกจากระบบ
                 </button>
               </>
             ) : (
               <>
-                <p className="auth-subtitle">Sign in to add items to cart and wishlist</p>
+                <p className="auth-subtitle">เข้าสู่ระบบเพื่อสั่งซื้อสินค้าและจัดการรายการโปรด</p>
                 <button className="auth-btn signin-btn" onClick={() => setAuthMode('login')}>
-                  Sign In
+                  เข้าสู่ระบบ
                 </button>
                 <button className="auth-btn register-btn" onClick={() => setAuthMode('register')}>
-                  Create Account
+                  สร้างบัญชีใหม่
                 </button>
               </>
             )}
@@ -176,13 +176,13 @@ export default function AuthModal({ onNavigate }) {
                   className={`sidebar-item ${activeTab === 'info' ? 'active' : ''}`}
                   onClick={() => setActiveTab('info')}
                 >
-                  <span>👤</span> Profile Info
+                  <span>👤</span> ข้อมูลส่วนตัว
                 </div>
                 <div 
                   className={`sidebar-item ${activeTab === 'orders' ? 'active' : ''}`}
                   onClick={() => setActiveTab('orders')}
                 >
-                  <span>📦</span> Order History
+                  <span>📦</span> ประวัติการสั่งซื้อ
                 </div>
               </div>
 
@@ -192,7 +192,7 @@ export default function AuthModal({ onNavigate }) {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Sign Out
+                  ออกจากระบบ
                </button>
             </div>
 
@@ -201,28 +201,28 @@ export default function AuthModal({ onNavigate }) {
 
               {activeTab === 'info' && (
                 <div className="dashboard-section">
-                  <h2 className="dashboard-title">My Profile</h2>
+                  <h2 className="dashboard-title">ข้อมูลส่วนตัว</h2>
                   <div className="profile-details">
                     <div className="profile-item">
-                      <span className="profile-label">Full Name</span>
+                      <span className="profile-label">ชื่อ-นามสกุล</span>
                       <span className="profile-value">{user.firstName} {user.lastName}</span>
                     </div>
                     <div className="profile-item">
-                      <span className="profile-label">Email</span>
+                      <span className="profile-label">อีเมล</span>
                       <span className="profile-value">{user.email}</span>
                     </div>
                     <div className="profile-item">
-                      <span className="profile-label">Phone</span>
+                      <span className="profile-label">เบอร์โทรศัพท์</span>
                       <span className="profile-value">{user.phone || '-'}</span>
                     </div>
                     <div className="profile-item">
-                      <span className="profile-label">Address</span>
+                      <span className="profile-label">ที่อยู่</span>
                       <span className="profile-value">{user.address || '-'}</span>
                     </div>
 
                     {user.username && (
                       <div className="profile-item">
-                        <span className="profile-label">Username</span>
+                        <span className="profile-label">ชื่อผู้ใช้</span>
                         <span className="profile-value">{user.username}</span>
                       </div>
                     )}
@@ -232,7 +232,7 @@ export default function AuthModal({ onNavigate }) {
                       onClick={() => setAuthMode('editProfile')}
                       style={{maxWidth: 300, marginTop: 40}}
                     >
-                      Edit Information
+                      แก้ไขข้อมูลส่วนตัว
                     </button>
                     
                     {isAdmin && (
@@ -251,7 +251,7 @@ export default function AuthModal({ onNavigate }) {
 
               {activeTab === 'orders' && (
                 <div className="dashboard-section">
-                  <h2 className="dashboard-title">Order History</h2>
+                  <h2 className="dashboard-title">ประวัติการสั่งซื้อ</h2>
                   {/* Reuse OrderHistory component */}
                   <div style={{marginTop: 20}}>
                      <OrderHistory userId={user.id} />
@@ -287,8 +287,8 @@ export default function AuthModal({ onNavigate }) {
         {/* Login View */}
         {authMode === 'login' && (
           <div className="auth-login">
-            <button className="auth-back" onClick={() => setAuthMode('menu')}>← Back</button>
-            <h2 className="auth-title">Sign In</h2>
+            <button className="auth-back" onClick={() => setAuthMode('menu')}>← ย้อนกลับ</button>
+            <h2 className="auth-title">เข้าสู่ระบบ</h2>
             <p className="auth-subtitle">กรอกอีเมลและรหัสผ่านของคุณ</p>
             
             {authError && <div className="auth-error">{authError}</div>}
@@ -315,7 +315,7 @@ export default function AuthModal({ onNavigate }) {
                 />
               </div>
               <button type="submit" className="auth-submit-btn">
-                Sign In
+                เข้าสู่ระบบ
               </button>
             </form>
             
@@ -330,13 +330,13 @@ export default function AuthModal({ onNavigate }) {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Sign in with Google
+              เข้าสู่ระบบด้วย Google
             </button>
             
             <p className="auth-switch">
-              Don't have an account?{' '}
+              ยังไม่มีบัญชีผู้ใช้?{' '}
               <button className="auth-link" onClick={() => setAuthMode('register')}>
-                Create Account
+                สมัครสมาชิก
               </button>
             </p>
           </div>
@@ -345,16 +345,16 @@ export default function AuthModal({ onNavigate }) {
         {/* Register View */}
         {authMode === 'register' && (
           <div className="auth-register">
-            <button className="auth-back" onClick={() => setAuthMode('menu')}>← Back</button>
-            <h2 className="auth-title">Create Account</h2>
-            <p className="auth-subtitle">Fill in your details</p>
+            <button className="auth-back" onClick={() => setAuthMode('menu')}>← ย้อนกลับ</button>
+            <h2 className="auth-title">สมัครสมาชิก</h2>
+            <p className="auth-subtitle">กรอกข้อมูลเพื่อสมัครสมาชิก</p>
             
             {authError && <div className="auth-error">{authError}</div>}
             
             <form onSubmit={handleRegisterSubmit} className="auth-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label>First Name *</label>
+                  <label>ชื่อจริง *</label>
                   <input
                     type="text"
                     name="firstName"
@@ -366,7 +366,7 @@ export default function AuthModal({ onNavigate }) {
                   {registerErrors.firstName && <span className="field-error">{registerErrors.firstName}</span>}
                 </div>
                 <div className="form-group">
-                  <label>Last Name *</label>
+                  <label>นามสกุล *</label>
                   <input
                     type="text"
                     name="lastName"
@@ -381,7 +381,7 @@ export default function AuthModal({ onNavigate }) {
               
               <div className="form-row">
                 <div className="form-group">
-                  <label>Phone *</label>
+                  <label>เบอร์โทรศัพท์ *</label>
                   <input
                     type="tel"
                     name="phone"
@@ -393,7 +393,7 @@ export default function AuthModal({ onNavigate }) {
                   {registerErrors.phone && <span className="field-error">{registerErrors.phone}</span>}
                 </div>
                 <div className="form-group">
-                  <label>Email *</label>
+                  <label>อีเมล *</label>
                   <input
                     type="email"
                     name="email"
@@ -407,7 +407,7 @@ export default function AuthModal({ onNavigate }) {
               </div>
 
               <div className="form-group full">
-                <label>Address *</label>
+                <label>ที่อยู่ *</label>
                 <textarea
                   name="address"
                   value={registerData.address}
@@ -419,7 +419,7 @@ export default function AuthModal({ onNavigate }) {
               </div>
 
                <div className="form-group full">
-                <label>Username *</label>
+                <label>ชื่อผู้ใช้ (Username) *</label>
                 <input
                   type="text"
                   name="username"
@@ -432,7 +432,7 @@ export default function AuthModal({ onNavigate }) {
               </div>
 
               <div className="form-group full">
-                <label>Password *</label>
+                <label>รหัสผ่าน *</label>
                 <input
                   type="password"
                   name="password"
@@ -445,7 +445,7 @@ export default function AuthModal({ onNavigate }) {
               </div>
 
               <div className="form-group full">
-                <label>Confirm Password *</label>
+                <label>ยืนยันรหัสผ่าน *</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -458,7 +458,7 @@ export default function AuthModal({ onNavigate }) {
               </div>
 
               <button type="submit" className="auth-submit-btn">
-                Register
+                สมัครสมาชิก
               </button>
             </form>
           </div>

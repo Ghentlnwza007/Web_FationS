@@ -33,7 +33,7 @@ export default function EditProfileForm({ user, onBack, onSave }) {
 
   return (
     <div className="auth-edit-profile">
-      <button className="auth-back" onClick={onBack}>← Back</button>
+      <button className="auth-back" onClick={onBack}>← ย้อนกลับ</button>
       <h2 className="auth-title">แก้ไขข้อมูลส่วนตัว</h2>
       
       {success && <div className="auth-success">บันทึกข้อมูลเรียบร้อยแล้ว!</div>}

@@ -156,7 +156,7 @@ export default function CheckoutModal({ onGoHome }) {
         customerEmail: formData.email,
         items: cart,
         total: finalTotal,
-        status: 'pending',
+        status: 'processing', // Auto-set to processing (Paid) for Credit Card
         shippingAddress: {
             firstName: formData.firstName,
             lastName: formData.lastName,

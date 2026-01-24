@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { CartContext, CurrencyContext, WishlistContext, AuthContext } from '../context/Contexts';
+
+import { CartContext, CurrencyContext, WishlistContext, AuthContext, ProductContext } from '../context/Contexts';
 import { db } from '../firebase';
-import { collections } from '../data/products';
+// Collections import removed as we use Context now
 import GalleryProductCard from './GalleryProductCard';
 import SizeSelectionModal from './SizeSelectionModal';
 import './ProductGallery.css';
@@ -12,29 +13,14 @@ import './ProductGallery.css';
 // ==============================================
 export default function ProductGallery({ onBack, initialSearchTerm = '', initialCategory = 'all' }) {
   const { addToCart } = useContext(CartContext);
+  const { products: allProducts, loading } = useContext(ProductContext);
+  
   const [activeFilter, setActiveFilter] = useState(initialCategory);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [sortBy, setSortBy] = useState("default");
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [firestoreProducts, setFirestoreProducts] = useState([]);
 
-  // Load products from Firestore (added via Admin Panel)
-  useEffect(() => {
-    const loadFirestoreProducts = async () => {
-      try {
-        const snapshot = await db.collection('products').get();
-        const products = snapshot.docs.map(doc => ({
-          id: `fs-${doc.id}`,
-          ...doc.data(),
-          category: doc.data().collection || 'unisex'
-        }));
-        setFirestoreProducts(products);
-      } catch (error) {
-        console.log("No Firestore products or error loading:", error);
-      }
-    };
-    loadFirestoreProducts();
-  }, []);
+  // Firestore loading logic removed (moved to Context)
 
   // Update searchTerm when initialSearchTerm changes
   useEffect(() => {
@@ -50,14 +36,7 @@ export default function ProductGallery({ onBack, initialSearchTerm = '', initial
     }
   }, [initialCategory]);
 
-  // Combine all products from all collections + Firestore
-  const allProducts = [
-    ...collections.men.products.map((p) => ({ ...p, category: "men" })),
-    ...collections.women.products.map((p) => ({ ...p, category: "women" })),
-    ...collections.unisex.products.map((p) => ({ ...p, category: "unisex" })),
-    ...collections.sports.products.map((p) => ({ ...p, category: "sports" })),
-    ...firestoreProducts.map((p) => ({ ...p, model: p.model || p.name })),
-  ];
+  // allProducts is now from Context
 
   // Filter products
   let filteredProducts = allProducts.filter((product) => {
@@ -88,21 +67,21 @@ export default function ProductGallery({ onBack, initialSearchTerm = '', initial
 
   const filters = [
     { key: "all", label: "All", count: allProducts.length },
-    { key: "men", label: "Men's", count: collections.men.products.length },
+    { key: "men", label: "Men's", count: allProducts.filter(p => p.category === 'men').length },
     {
       key: "women",
       label: "Women's",
-      count: collections.women.products.length,
+      count: allProducts.filter(p => p.category === 'women').length,
     },
     {
       key: "unisex",
       label: "Unisex",
-      count: collections.unisex.products.length,
+      count: allProducts.filter(p => p.category === 'unisex').length,
     },
     {
       key: "sports",
       label: "Sports",
-      count: collections.sports.products.length,
+      count: allProducts.filter(p => p.category === 'sports').length,
     },
   ];
 
