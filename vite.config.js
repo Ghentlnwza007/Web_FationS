@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/Web_FationS/', // GitHub Pages repository name
+  base: '/', // Changed from '/Web_FationS/' for Vercel deployment
   server: {
     port: 3000,
     open: true
