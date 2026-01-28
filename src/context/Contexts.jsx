@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { firebase, auth, db } from '../firebase';
+import { firebase, auth, db } from '../services/firebase';
 
 import { collections } from '../data/products';
 import { translations } from '../data/translations';
@@ -661,8 +661,12 @@ export function OrderProvider({ children }) {
   const calculateOrderCount = () => {
     try {
       const savedOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
-      // Sum the item quantities
-      const totalItems = savedOrders.reduce((total, order) => {
+      // Only count orders that are NOT delivered or cancelled (active orders)
+      const activeOrders = savedOrders.filter(order => 
+        order.status !== 'delivered' && order.status !== 'cancelled'
+      );
+      // Sum the item quantities from active orders only
+      const totalItems = activeOrders.reduce((total, order) => {
         const orderItemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
         return total + orderItemsCount;
       }, 0);

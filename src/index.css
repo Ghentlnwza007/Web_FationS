@@ -8,56 +8,57 @@
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
 @import "./styles/responsive.css";
+@import "./styles/misc.css";
+@import "./styles/modals.css";
 
 /* Core Components */
-@import "./components/Navbar.css";
-@import "./components/CurrencySelector.css";
-@import "./components/Hero.css";
-@import "./components/Footer.css";
+@import "./components/layout/Navbar.css";
+@import "./components/layout/CurrencySelector.css";
+@import "./features/shop/home/components/Hero.css";
+@import "./components/layout/Footer.css";
 
 /* Sections */
-@import "./components/Collections.css";
-@import "./components/NewArrivals.css";
-@import "./components/About.css";
-@import "./components/Creators.css";
-@import "./components/CreatorProfile.css";
-@import "./components/FinalSale.css";
-@import "./components/RecentlyViewed.css";
+@import "./features/shop/home/components/Collections.css";
+@import "./features/shop/home/components/NewArrivals.css";
+@import "./features/shop/home/components/About.css";
+@import "./features/shop/home/components/Creators.css";
+@import "./features/shop/home/components/CreatorProfile.css";
+@import "./features/shop/home/components/FinalSale.css";
+@import "./features/shop/product-details/components/RecentlyViewed.css";
 
 /* Products */
-@import "./components/ProductCard.css";
-@import "./components/ProductGallery.css";
-@import "./components/ProductActions.css";
-@import "./components/ProductReviews.css";
-@import "./components/ProductCompare.css";
-@import "./components/Product3DViewer.css";
+@import "./features/shop/product-list/components/ProductCard.css";
+@import "./features/shop/product-details/components/ProductGallery.css";
+@import "./features/shop/product-details/components/ProductActions.css";
+@import "./features/shop/product-details/components/ProductReviews.css";
+@import "./features/shop/product-details/components/ProductCompare.css";
+@import "./features/shop/product-details/components/Product3DViewer.css";
 
 /* Modals & Overlays */
-@import "./components/ProductModal.css";
-@import "./components/CartSidebar.css";
-@import "./components/WishlistSidebar.css";
-@import "./components/AuthModal.css";
-@import "./components/RegistrationModal.css";
-@import "./components/SearchModal.css";
-@import "./components/SizeSelectionModal.css";
-
-@import "./components/ReviewModal.css";
+@import "./features/shop/product-details/components/ProductModal.css";
+@import "./features/shop/cart/CartSidebar.css";
+@import "./features/shop/wishlist/WishlistSidebar.css";
+@import "./features/auth/components/AuthModal.css";
+@import "./features/auth/components/RegistrationModal.css";
+@import "./components/common/SearchModal.css";
+@import "./features/shop/product-details/components/SizeSelectionModal.css";
+@import "./features/shop/product-details/components/ReviewModal.css";
 
 /* Features & Widgets */
-@import "./components/StarRating.css";
-@import "./components/ReviewForm.css";
-@import "./components/ColorSelector.css";
-@import "./components/ShareButtons.css";
-@import "./components/FlashSaleTimer.css";
-@import "./components/StockNotification.css";
-@import "./components/LoyaltyPoints.css";
-@import "./components/LiveChat.css";
-@import "./components/AIChatbot.css";
-@import "./components/VirtualTryOn.css";
-@import "./components/ColorPicker.css";
+@import "./components/ui/StarRating.css";
+@import "./features/shop/product-details/components/ReviewForm.css";
+@import "./components/ui/ColorSelector.css";
+@import "./components/common/ShareButtons.css";
+@import "./features/shop/home/components/FlashSaleTimer.css";
+@import "./features/shop/product-details/components/StockNotification.css";
+@import "./features/user/components/LoyaltyPoints.css";
+@import "./features/support/components/LiveChat.css";
+@import "./features/support/components/AIChatbot.css";
+@import "./features/shop/product-details/components/VirtualTryOn.css";
+@import "./components/ui/ColorPicker.css";
 
 /* Admin */
-@import "./components/AdminPanel.css";
+@import "./features/admin/dashboard/AdminPanel.css";
 
 /* Misc */
 @import "./styles/ErrorBoundary.css";

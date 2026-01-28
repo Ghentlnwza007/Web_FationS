@@ -12,35 +12,49 @@ import {
 } from './context/Contexts';
 
 // Components
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Collections from './components/Collections';
-import NewArrivals from './components/NewArrivals';
-import About from './components/About';
-import Footer from './components/Footer';
+// Components - Layout
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import ProtectedRoute from './components/layout/ProtectedRoute';
+import './components/layout/ProtectedRoute.css';
 
-// Pages/Sections
-import ProductGallery from './components/ProductGallery';
-import FinalSalePage from './components/FinalSalePage';
-import AdminPanel from './components/AdminPanel';
+// Components - Common
+import ErrorBoundary from './components/common/ErrorBoundary';
+import SearchModal from './components/common/SearchModal';
+import OrderingGuide from './components/common/OrderingGuide';
 
-// Modals/Overlays
-import ProductModal from './components/ProductModal';
-import SearchModal from './components/SearchModal';
-import CartSidebar from './components/CartSidebar';
-import WishlistSidebar from './components/WishlistSidebar';
-import AuthModal from './components/AuthModal';
-import CheckoutModal from './components/CheckoutModal';
-import ProductCompareModal from './components/ProductCompareModal';
+// Components - UI
+import Toast from './components/ui/Toast';
 
-// Widgets
-import CompareFloatingButton from './components/CompareFloatingButton';
-import UnifiedChatWidget from './components/UnifiedChatWidget';
-import Toast from './components/Toast';
-import ErrorBoundary from './components/ErrorBoundary';
-import ClientServices from './components/ClientServices';
-import ProtectedRoute from './components/ProtectedRoute';
-import './components/ProtectedRoute.css';
+// Features - Auth
+import AuthModal from './features/auth/components/AuthModal';
+
+// Features - Admin
+import AdminPanel from './features/admin/dashboard/AdminPanel';
+
+// Features - Shop (Home)
+import Hero from './features/shop/home/components/Hero';
+import Collections from './features/shop/home/components/Collections';
+import NewArrivals from './features/shop/home/components/NewArrivals';
+import About from './features/shop/home/components/About';
+import FinalSalePage from './features/shop/home/components/FinalSalePage';
+
+// Features - Shop (Product List/Details)
+import ProductGallery from './features/shop/product-details/components/ProductGallery';
+import ProductModal from './features/shop/product-details/components/ProductModal';
+import ProductCompareModal from './features/shop/product-details/components/ProductCompareModal';
+import CompareFloatingButton from './features/shop/product-details/components/CompareFloatingButton';
+
+// Features - Shop (Cart & Checkout)
+import CartSidebar from './features/shop/cart/CartSidebar';
+import CheckoutModal from './features/shop/checkout/CheckoutModal';
+
+// Features - Shop (Wishlist)
+import WishlistSidebar from './features/shop/wishlist/WishlistSidebar';
+
+// Features - Support
+import UnifiedChatWidget from './features/support/components/UnifiedChatWidget';
+import ClientServices from './features/support/components/ClientServices';
 
 // =============================================
 // MAIN APP COMPONENT
@@ -51,6 +65,7 @@ function App() {
   const [showSearch, setShowSearch] = useState(false);
   const [globalSearchTerm, setGlobalSearchTerm] = useState('');
   const [galleryCategory, setGalleryCategory] = useState('all');
+  const [showOrderingGuide, setShowOrderingGuide] = useState(false);
 
   const navigateTo = (page) => {
     setCurrentPage(page);
@@ -124,6 +139,7 @@ function App() {
                     <Footer 
                       onNavigate={navigateTo} 
                       onNavigateCategory={navigateToCategory}
+                      onShowOrderingGuide={() => setShowOrderingGuide(true)}
                     />
 
                     {activeModal && (
@@ -148,6 +164,10 @@ function App() {
                     <CompareFloatingButton />
                     <UnifiedChatWidget />
                     <Toast />
+                    <OrderingGuide 
+                      isOpen={showOrderingGuide} 
+                      onClose={() => setShowOrderingGuide(false)} 
+                    />
                   </div>
                   </ProductProvider>
                 </OrderProvider>
