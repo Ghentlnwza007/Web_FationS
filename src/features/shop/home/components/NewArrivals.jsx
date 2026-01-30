@@ -91,7 +91,10 @@ function NewArrivalCard({ product }) {
       
       {showSizeModal && (
         <SizeSelectionModal
-          product={product}
+          product={{
+            ...product,
+            image: product.images[currentImageIndex]
+          }}
           onClose={() => setShowSizeModal(false)}
           onAddToCart={addToCart}
         />
@@ -100,10 +103,14 @@ function NewArrivalCard({ product }) {
   );
 }
 
+import { useSyncedProducts } from '../../../../hooks/useSyncedProducts';
+
 // =============================================
 // NEW ARRIVALS SECTION
 // =============================================
 export default function NewArrivals() {
+  const products = useSyncedProducts(newArrivalsData);
+
   return (
     <section className="new-arrivals" id="new-arrivals">
       <div className="section-header">
@@ -112,7 +119,7 @@ export default function NewArrivals() {
         <div className="section-line" />
       </div>
       <div className="arrivals-grid">
-        {newArrivalsData.map((product) => (
+        {products.map((product) => (
           <NewArrivalCard key={product.id} product={product} />
         ))}
       </div>

@@ -446,6 +446,12 @@ export const newArrivalsData = [
     id: 101,
     name: "Kasper Digi Waffle T-Shirt",
     price: 12990.43,
+    model: "Digi Waffle Premium",
+    material: "100% Cotton Waffle Knit",
+    color: "Cream",
+    colorVariants: [
+      { name: "Cream", hex: "#f5f5dc", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMT6381_3.jpg" }
+    ],
     size: "S, M, L, XL",
     stock: 10,
     images: [
@@ -460,6 +466,12 @@ export const newArrivalsData = [
     id: 102,
     name: "Shadow Studded Corset Top",
     price: 15490.76,
+    model: "Studded Leather Corset",
+    material: "Premium Leather with Metal Studs",
+    color: "Black",
+    colorVariants: [
+      { name: "Black", hex: "#1a1a1a", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/11NOVWW0238.jpg" }
+    ],
     size: "S, M, L, XL, XXL",
     stock: 10,
     images: [
@@ -474,6 +486,12 @@ export const newArrivalsData = [
     id: 103,
     name: "Black Mist Mini Dress",
     price: 8990.90,
+    model: "Mist Collection",
+    material: "Premium Stretch Fabric",
+    color: "Black",
+    colorVariants: [
+      { name: "Black", hex: "#0d0d0d", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/Artboard1_89082489-8716-4060-b764-2095115259e3.jpg" }
+    ],
     size: "XS, S, M, L",
     stock: 10,
     images: [
@@ -488,6 +506,12 @@ export const newArrivalsData = [
     id: 104,
     name: "Mendoza Faux Fur Jacket",
     price: 6490.87,
+    model: "Mendoza Collection",
+    material: "High-Quality Faux Fur",
+    color: "Brown",
+    colorVariants: [
+      { name: "Brown", hex: "#8d6e63", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/29SEP1629.jpg" }
+    ],
     size: "One Size",
     stock: 10,
     images: [
@@ -509,6 +533,12 @@ export const saleProductsData = [
     name: "Vintage Denim Jacket",
     originalPrice: 5990.00,
     price: 4792.00, // 20% off
+    model: "Vintage Edition",
+    material: "100% Cotton Denim",
+    color: "Blue Denim",
+    colorVariants: [
+      { name: "Blue Denim", hex: "#3f51b5", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JADEDMAN23MAY73480.jpg" }
+    ],
     size: "S, M, L, XL",
     stock: 5,
     images: [
@@ -524,6 +554,12 @@ export const saleProductsData = [
     name: "Premium Leather Belt",
     originalPrice: 2490.00,
     price: 1992.00, // 20% off
+    model: "Classic Leather",
+    material: "Genuine Leather",
+    color: "Black",
+    colorVariants: [
+      { name: "Black", hex: "#000000", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/JMA6231_F1_0925.jpg?v=1760096508" }
+    ],
     size: "S, M, L",
     stock: 8,
     images: [
@@ -539,6 +575,12 @@ export const saleProductsData = [
     name: "Oversized Graphic Tee",
     originalPrice: 1890.00,
     price: 1512.00, // 20% off
+    model: "Oversized Fit",
+    material: "100% Cotton",
+    color: "Graphic Print",
+    colorVariants: [
+      { name: "Graphic Print", hex: "#424242", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/15JANWWECCOM1292.jpg?v=1737996348" }
+    ],
     size: "M, L, XL, XXL",
     stock: 12,
     images: [

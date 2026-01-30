@@ -92,7 +92,10 @@ function SaleProductCard({ product }) {
       
       {showSizeModal && (
         <SizeSelectionModal
-          product={product}
+          product={{
+            ...product,
+            image: product.images[currentImageIndex]
+          }}
           onClose={() => setShowSizeModal(false)}
           onAddToCart={addToCart}
         />
@@ -101,10 +104,14 @@ function SaleProductCard({ product }) {
   );
 }
 
+import { useSyncedProducts } from '../../../../hooks/useSyncedProducts';
+
 // =============================================
 // FINAL SALE PAGE COMPONENT
 // =============================================
 export default function FinalSalePage({ onBack }) {
+  const products = useSyncedProducts(saleProductsData);
+
   return (
     <section className="final-sale-page">
       <div className="sale-page-header">
@@ -119,7 +126,7 @@ export default function FinalSalePage({ onBack }) {
       </div>
       
       <div className="sale-page-grid">
-        {saleProductsData.map((product) => (
+        {products.map((product) => (
           <SaleProductCard key={product.id} product={product} />
         ))}
       </div>

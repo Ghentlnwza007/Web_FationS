@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, firebase } from '../../../services/firebase';
 import AdminAddProduct from '../products/AdminAddProduct';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import './AdminPanel.css';
 import { collections, newArrivalsData, saleProductsData } from '../../../data/products';
 
@@ -15,6 +16,7 @@ export default function AdminPanel({ onBack }) {
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
   const [stats, setStats] = useState({
     totalSales: 0,
     totalOrders: 0,
@@ -116,11 +118,11 @@ export default function AdminPanel({ onBack }) {
       let allStaticProducts = [];
       
       // From Collections
-      Object.values(collections).forEach(col => {
+      Object.entries(collections).forEach(([key, col]) => {
         col.products.forEach(p => {
           allStaticProducts.push({ 
             ...p, 
-            collection: col.title, 
+            collection: key, 
             category: 'collection',
             source: 'static'
           });
@@ -168,7 +170,8 @@ export default function AdminPanel({ onBack }) {
         productMap.set(String(p.id), p);
       });
 
-      const mergedProducts = Array.from(productMap.values());
+      const mergedProducts = Array.from(productMap.values())
+        .filter(p => !p.deleted); // Filter out soft-deleted products
       setProducts(mergedProducts);
     } catch (err) {
       console.error("Error loading products:", err);
@@ -214,9 +217,9 @@ export default function AdminPanel({ onBack }) {
         let allStaticProducts = [];
         
         // From Collections
-        Object.values(collections).forEach(col => {
+        Object.entries(collections).forEach(([key, col]) => {
             col.products.forEach(p => {
-                allStaticProducts.push({ ...p, collection: col.title, category: 'collection' });
+                allStaticProducts.push({ ...p, collection: key, category: 'collection' });
             });
         });
 
@@ -280,15 +283,25 @@ export default function AdminPanel({ onBack }) {
     }
   };
 
-  const deleteProduct = async (productId) => {
-    if (window.confirm('ต้องการลบสินค้านี้?')) {
-      try {
-        await db.collection('products').doc(productId).delete();
-        setProducts(products.filter(p => p.id !== productId));
-      } catch (err) {
-        console.error("Error deleting product:", err);
-      }
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+    
+    try {
+      // Soft delete: Mark as deleted instead of actual delete
+      await db.collection('products').doc(String(productToDelete.id)).set({ 
+          deleted: true,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      
+      setProducts(products.filter(p => p.id !== productToDelete.id));
+    } catch (err) {
+      console.error("Error deleting product:", err);
     }
+    setProductToDelete(null);
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
@@ -600,7 +613,7 @@ export default function AdminPanel({ onBack }) {
                     </div>
                     <div className="product-actions">
                       <button className="btn-edit" title="Edit" onClick={() => { setEditingProduct(product); setActiveMenu('add-product'); }}>✏️</button>
-                      <button className="btn-delete" onClick={() => deleteProduct(product.id)} title="Delete">🗑️</button>
+                      <button className="btn-delete" onClick={() => handleDeleteClick(product)} title="Delete">🗑️</button>
                     </div>
                   </div>
                 ))}
@@ -749,6 +762,13 @@ export default function AdminPanel({ onBack }) {
           </div>
         )}
       </main>
+
+      <DeleteConfirmationModal 
+        isOpen={!!productToDelete}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={confirmDelete}
+        productName={productToDelete?.name}
+      />
     </div>
   );
 }
