@@ -137,7 +137,7 @@ export default function Footer({ onNavigate, onNavigateCategory, onShowOrderingG
               <span className="contact-icon"><MapPinIcon /></span>
               <div className="contact-info">
                 <span className="contact-label">ที่อยู่</span>
-                <span>99 ถนนสุรนารี ซอยตรอกโรงไฟฟ้า </span>
+                <span>99/1 ถนนสุรนารี ซอยตรอกโรงไฟฟ้า </span>
                 <span>เขตในเมือง นครราชสีมา 30000</span>
               </div>
             </li>
