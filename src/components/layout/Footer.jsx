@@ -137,8 +137,8 @@ export default function Footer({ onNavigate, onNavigateCategory, onShowOrderingG
               <span className="contact-icon"><MapPinIcon /></span>
               <div className="contact-info">
                 <span className="contact-label">ที่อยู่</span>
-                <span>123 ถนนสุขุมวิท แขวงคลองตัน</span>
-                <span>เขตคลองเตย กรุงเทพฯ 10110</span>
+                <span>99 ถนนสุรนารี ซอยตรอกโรงไฟฟ้า </span>
+                <span>เขตในเมือง นครราชสีมา 30000</span>
               </div>
             </li>
             <li>
@@ -146,14 +146,14 @@ export default function Footer({ onNavigate, onNavigateCategory, onShowOrderingG
               <div className="contact-info">
                 <span className="contact-label">โทรศัพท์</span>
                 <a href="tel:+6621234567">02-123-4567</a>
-                <a href="tel:+66812345678">081-234-5678</a>
+                <a href="tel:+66812345678">093-479-9071</a>
               </div>
             </li>
             <li>
               <span className="contact-icon"><MailIcon /></span>
               <div className="contact-info">
                 <span className="contact-label">อีเมล</span>
-                <a href="mailto:contact@maison.co.th">contact@maison.co.th</a>
+                <a href="mailto:contact@maison.co.th">fation@maison.co.th</a>
               </div>
             </li>
             <li>

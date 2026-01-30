@@ -661,16 +661,19 @@ export function OrderProvider({ children }) {
   const calculateOrderCount = () => {
     try {
       const savedOrders = JSON.parse(localStorage.getItem('maison_orders') || '[]');
+      console.log('[OrderContext] All orders:', savedOrders.map(o => ({ id: o.id, status: o.status })));
       // Only count orders that are NOT delivered or cancelled (active orders)
       const activeOrders = savedOrders.filter(order => 
         order.status !== 'delivered' && order.status !== 'cancelled'
       );
+      console.log('[OrderContext] Active orders:', activeOrders.length);
       // Sum the item quantities from active orders only
       const totalItems = activeOrders.reduce((total, order) => {
         const orderItemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
         return total + orderItemsCount;
       }, 0);
       
+      console.log('[OrderContext] Total items count:', totalItems);
       setOrderCount(totalItems);
     } catch (e) {
       console.error("Error calculating order count", e);
@@ -685,6 +688,7 @@ export function OrderProvider({ children }) {
   }, []);
 
   const refreshOrderCount = () => {
+    console.log('[OrderContext] refreshOrderCount called!');
     calculateOrderCount();
   };
 

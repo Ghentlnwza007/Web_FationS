@@ -43,6 +43,17 @@ export default function OrderHistory({ userId, refreshOrderCount }) {
              return tB - tA;
           });
 
+          // SYNC ALL ORDERS TO LOCALSTORAGE FOR BADGE COUNT
+          // Convert Firestore timestamp to simple format for localStorage
+          const ordersForStorage = allOrders.map(o => ({
+            ...o,
+            createdAt: o.createdAt?.seconds ? { seconds: o.createdAt.seconds } : o.createdAt
+          }));
+          localStorage.setItem('maison_orders', JSON.stringify(ordersForStorage));
+          
+          // Refresh badge count after syncing
+          if (refreshOrderCount) refreshOrderCount();
+
           setOrders(allOrders);
           setLoading(false);
         }, (error) => {
@@ -62,7 +73,7 @@ export default function OrderHistory({ userId, refreshOrderCount }) {
         setOrders(localOrders);
         setLoading(false);
     }
-  }, [userId]);
+  }, [userId, refreshOrderCount]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('th-TH', {
@@ -211,8 +222,10 @@ export default function OrderHistory({ userId, refreshOrderCount }) {
         await db.collection('orders').doc(activeOrderId).update({ status: newStatus });
       }
       
-      // Refresh badge count after status update
-      if (refreshOrderCount) refreshOrderCount();
+      // Refresh badge count after status update (use setTimeout to ensure localStorage is fully written)
+      if (refreshOrderCount) {
+        setTimeout(() => refreshOrderCount(), 50);
+      }
     } catch (err) {
       console.error('Error updating order:', err);
       // Revert if failed

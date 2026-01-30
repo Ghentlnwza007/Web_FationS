@@ -11,16 +11,20 @@ The website is hosted on GitHub Pages. You can visit it at:
 
 _Note: If you just pushed new code, it might take 1-2 minutes to update._
 
-### Option 2: Run Locally (Recommended for Development)
+### Option 2: Run Locally (Recommended)
 
-To view the site on your computer without internet or waiting for deployment:
+This project requires **Node.js** installed on your computer.
 
-1. Open a terminal (Command Prompt or PowerShell) in this folder.
-2. Run the following command:
-   ```powershell
-   python -m http.server
+1. **Install Node.js**: Download and install from [https://nodejs.org/](https://nodejs.org/).
+2. **Install Dependencies**: Open a terminal in this folder and run:
+   ```bash
+   npm install
    ```
-3. Open your browser and go to: [http://localhost:8000](http://localhost:8000)
+3. **Start the App**: Run the following command to start the development server:
+   ```bash
+   npm run dev
+   ```
+4. **Open in Browser**: The terminal will show a local URL (usually `http://localhost:5173`). Open it in your browser.
 
 ## Features
 

@@ -179,15 +179,14 @@ export default function CheckoutModal({ onGoHome }) {
     }
 
     try {
-        // 2. Save to Firestore if user is logged in
-        if (user && user.id) {
-            await db.collection('orders').doc(newOrderNumber).set({
-                ...orderData,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Overwrite with server timestamp
-            });
-        }
+        // 2. Save to Firestore (All users + Guests)
+        await db.collection('orders').doc(newOrderNumber).set({
+            ...orderData,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp() // Overwrite with server timestamp
+        });
+        console.log("Order saved to Firestore:", newOrderNumber);
     } catch (error) {
-        console.error("Error saving order:", error);
+        console.error("Error saving order to Firestore:", error);
     }
 
     setTimeout(() => {

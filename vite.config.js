@@ -7,7 +7,8 @@ export default defineConfig({
   base: '/', // Changed from '/Web_FationS/' for Vercel deployment
   server: {
     port: 3000,
-    open: true
+    open: true,
+    host: true // เปิดให้คอมเครื่องอื่นในเครือข่ายเข้าถึงได้
   },
   build: {
     outDir: 'dist',
