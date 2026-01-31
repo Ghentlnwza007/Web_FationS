@@ -298,8 +298,10 @@ export default function AdminPanel({ onBack }) {
       }, { merge: true });
       
       setProducts(products.filter(p => p.id !== productToDelete.id));
+      loadProducts();
     } catch (err) {
       console.error("Error deleting product:", err);
+      alert('เกิดข้อผิดพลาดในการลบสินค้า: ' + err.message);
     }
     setProductToDelete(null);
   };
@@ -613,7 +615,7 @@ export default function AdminPanel({ onBack }) {
                     </div>
                     <div className="product-actions">
                       <button className="btn-edit" title="Edit" onClick={() => { setEditingProduct(product); setActiveMenu('add-product'); }}>✏️</button>
-                      <button className="btn-delete" onClick={() => handleDeleteClick(product)} title="Delete">🗑️</button>
+                      <button className="btn-delete" onClick={() => handleDeleteClick(product)} title="Delete" data-testid={`delete-btn-${product.id}`}>🗑️</button>
                     </div>
                   </div>
                 ))}

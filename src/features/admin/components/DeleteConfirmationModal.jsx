@@ -16,15 +16,15 @@ export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm, pr
         </div>
         <h3 className="delete-modal-title">ยืนยันการลบสินค้า</h3>
         <p className="delete-modal-message">
-          คุณแน่ใจหรือไม่ที่จะลบสินค้า <strong>"{productName}"</strong>? 
+          คุณแน่ใจหรือไม่ว่าต้องการลบสินค้านี้?
           <br />
-          การดำเนินการนี้ไม่สามารถเรียกคืนได้
+          <span style={{ fontSize: '0.9em', color: '#666' }}>"{productName}"</span>
         </p>
         <div className="delete-modal-actions">
-          <button className="delete-modal-btn cancel" onClick={onClose}>
+          <button className="delete-modal-btn cancel" onClick={onClose} data-testid="cancel-delete-btn">
             ยกเลิก
           </button>
-          <button className="delete-modal-btn confirm" onClick={onConfirm}>
+          <button className="delete-modal-btn confirm" onClick={onConfirm} data-testid="confirm-delete-btn">
             ลบสินค้า
           </button>
         </div>
