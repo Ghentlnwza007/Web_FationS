@@ -264,6 +264,8 @@ const ClientServices = () => {
                   onChange={(e) => setAppointment({...appointment, name: e.target.value})}
                 />
               </div>
+              <div className="form-group">
+                <label className="form-label">{text.appointment.email}</label>
                 <input 
                   type="email" 
                   className="form-input" 
@@ -383,7 +385,7 @@ const ClientServices = () => {
             <div className="location-item">
                 <div className="location-city">{text.locations.address}</div>
                 <div className="location-address">
-                    99/1 ถนนสุรนารี ซอยตรอกโรงไฟฟ้า<br/>
+                    99/1 ถนนสุรนารี ซ.ตรอกโรงไฟฟ้า<br/>
                     เขตในเมือง นครราชสีมา 30000<br/>
                     Thailand
                 </div>
