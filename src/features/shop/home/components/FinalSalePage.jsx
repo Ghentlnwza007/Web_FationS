@@ -1,126 +1,183 @@
 
 import React, { useState, useContext } from 'react';
 import { CurrencyContext, CartContext, WishlistContext } from '../../../../context/Contexts';
+import SizeSelectionModal from '../../product-details/components/SizeSelectionModal';
+import './NewArrivals.css'; // Re-use styling from New Arrivals
 
 // =============================================
-// FINAL SALE PRODUCTS DATA (20% OFF)
+// FINAL SALE PRODUCTS DATA (Now 4 Items)
 // =============================================
 const saleProductsData = [
   {
     id: 201,
-    name: "Vintage Denim Jacket",
-    originalPrice: 5990.00,
-    price: 4792.00, // 20% off
-    size: "S, M, L, XL",
+    name: "Rebel Military Jacket in Khaki",
+    originalPrice: 3670.00,
+    price: 2936.00, // 20% off
+    model: "Military Jacket",
+    material: "100% Cotton",
+    color: "Green",
+    size: "S, M, L",
     stock: 5,
     images: [
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JADEDMAN23MAY73480.jpg",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMJK4056_F1_0725.jpg",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMDJ6064_F1_1125.jpg"
+      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMDJ6064_F1_1125.jpg",
+      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/JMDJ6064_B1_1125.jpg?v=1763996764",
+      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/JMDJ6064_F4_1125.jpg?v=1763996764"
     ],
-    discount: 20,
+    colorVariants: [
+          { name: "Green", hex: "#2f6640ff", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMDJ6064_F1_1125.jpg" },
+        ],
+    tag: "SALE",
     description: "เสื้อแจ็คเก็ตยีนส์วินเทจสไตล์"
   },
   {
     id: 202,
-    name: "Premium Leather Belt",
-    originalPrice: 2490.00,
-    price: 1992.00, // 20% off
-    size: "S, M, L",
+    name: "Black Vapor Tracksuit Top",
+    originalPrice: 3900.00,
+    price: 3120.00, // 20% off
+    model: "Black Vapor Tracksuit",
+    material: "100% Cotton",
+    color: "Black",
+    size: "S, M, L, XL",
     stock: 8,
     images: [
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/JMA6231_F1_0925.jpg?v=1760096508",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMA6231_F1_0925edited.jpg",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/FLAT6.jpg"
+      "https://jadedldn.com/cdn/shop/files/JMDJ5193_F1_0625_1200x1800.jpg?v=1749725050",
+      "https://jadedldn.com/cdn/shop/files/17JANMWECCOM00681_1200x1800.jpg?v=1749725043",
+      "https://jadedldn.com/cdn/shop/files/JMDJ5193_F3_0625_1200x1800.jpg?v=1749725043"
     ],
-    discount: 20,
-    description: "เข็มขัดหนังพรีเมี่ยมคุณภาพสูง"
+    colorVariants: [
+          { name: "Black", hex: "#000000ff", image: "https://jadedldn.com/cdn/shop/files/JMDJ5193_F1_0625_1200x1800.jpg?v=1749725050" },
+        ],
+    tag: "SALE",
+    description: "เสื้อกันหนาวคุณภาพสูง"
   },
   {
     id: 203,
-    name: "Oversized Graphic Tee",
-    originalPrice: 1890.00,
-    price: 1512.00, // 20% off
-    size: "M, L, XL, XXL",
+    name: "Sporty Baggy Monster Hoodie",
+    originalPrice: 5470.00,
+    price: 4370.00, // 20% off
+    model: "Sporty Baggy",
+    material: "100% Cotton",
+    color: "Gray",
+    size: "M, L, XL",
     stock: 12,
     images: [
       "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/15JANWWECCOM1292.jpg?v=1737996348",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/Artboard1_a7af62d9-1df2-4e06-a649-003dee60d630.jpg",
-      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1000,c_limit/shopi///cdn/shop/files/JMT6381_3.jpg"
+      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/15JANWWECCOM1279.jpg?v=1737996348",
+      "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/15JANWWECCOM1325.jpg?v=1737996348"
     ],
-    discount: 20,
-    description: "เสื้อยืดโอเวอร์ไซส์กราฟิก"
+    colorVariants: [
+          { name: "Gray", hex: "#848894ff", image: "https://assets.jadedldn.com/image/upload/e_sharpen:50,w_1600,c_limit/shopi///cdn/shop/files/15JANWWECCOM1292.jpg?v=1737996348" },
+        ],
+    tag: "SALE",
+    description: "เสื้อฮู้ดกราฟิก"
+  },
+  {
+    id: 204, // New 4th Item
+    name: "Argentina Away Jersey 2006 Messi",
+    originalPrice: 4300.00,
+    price: 3440.00, // 20% off
+    model: "JN3709",
+    material: "100% polyester (100% recycled)",
+    color: "Dark Blue",
+    size: "S, M, L, XL",
+    stock: 15,
+    images: [
+      "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/f0011b687bb44caf9ef73bfd0698f69b_9366/Argentina_Away_Jersey_2006_Messi_Blue_JN3709_HM1.jpg",
+      "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/b9aee22649f74d7c936245cc495c3fa2_9366/Argentina_Away_Jersey_2006_Messi_Blue_JN3709_HM3_hover.jpg",
+      "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/bd9934bafeb04096ad71a78c6a627573_9366/Argentina_Away_Jersey_2006_Messi_Blue_JN3709_HM11.jpg"
+    ],
+    colorVariants: [
+          { name: "Dark Blue", hex: "#50639bff", image: "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/f0011b687bb44caf9ef73bfd0698f69b_9366/Argentina_Away_Jersey_2006_Messi_Blue_JN3709_HM1.jpg" },
+        ],
+    tag: "SALE",
+    description: "เสื้อฟุตบอลแท้ 100%"
   }
 ];
 
-// Sub-component for Sale Product Card
-function SaleProductCard({ product }) {
+// Reusing the Card logic but adapted for Sale Data
+function SaleCard({ product }) {
   const { addToCart } = useContext(CartContext);
-  const { toggleWishlist, isInWishlist } = useContext(WishlistContext);
   const { formatPrice } = useContext(CurrencyContext);
-  const wishlisted = isInWishlist(product.id);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showSizeModal, setShowSizeModal] = useState(false);
+
+  const nextImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => 
+      prev === product.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => 
+      prev === 0 ? product.images.length - 1 : prev - 1
+    );
+  };
 
   return (
-    <div className="sale-product-card">
-      <div className="sale-product-image">
-        <img src={product.images[0]} alt={product.name} />
-        <span className="sale-discount-tag">-{product.discount}%</span>
-        {product.stock < 5 && <span className="sale-badge" style={{ fontSize: '12px', padding: '5px 10px', top: '60px', left: '15px', position: 'absolute', background: 'rgba(0,0,0,0.7)', animation: 'none' }}>Only {product.stock} left!</span>}
-        
-        <button 
-          className={`wishlist-icon ${wishlisted ? 'active' : ''}`}
-          onClick={(e) => { e.stopPropagation(); toggleWishlist({ ...product, image: product.images[0] }); }}
-          style={{ position: 'absolute', top: '15px', right: '15px', background: 'white', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10 }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={wishlisted ? "#e74c3c" : "none"} stroke={wishlisted ? "#e74c3c" : "currentColor"} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </button>
-      </div>
-      
-      <div className="sale-product-info">
-        <h3 className="sale-product-name">{product.name}</h3>
-        <p className="sale-product-desc">{product.description}</p>
-        <div className="sale-price-container">
-          <span className="sale-discounted-price">{formatPrice(product.price)}</span>
-          <span className="sale-original-price">{formatPrice(product.originalPrice)}</span>
+    <>
+      <div 
+        className="new-arrival-card" // Using New Arrival styles
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="new-arrival-image">
+          <img 
+            src={product.images[currentImageIndex]} 
+            alt={product.name}
+            loading="lazy"
+          />
+          <span className="arrival-tag sale">SALE -20%</span>
+          
+          {isHovered && product.images.length > 1 && (
+            <>
+              <button className="carousel-arrow left" onClick={prevImage}>‹</button>
+              <button className="carousel-arrow right" onClick={nextImage}>›</button>
+            </>
+          )}
+          
+          <button 
+            className="arrival-add-to-cart"
+            onClick={(e) => { e.stopPropagation(); setShowSizeModal(true); }}
+          >
+            Add to Cart
+          </button>
         </div>
-        <div className="sale-product-sizes" style={{ margin: '10px 0', fontSize: '13px', color: '#666' }}>
-          <span>Sizes: </span>
-          <span className="sizes-list" style={{ fontWeight: 500, color: '#333' }}>{product.size}</span>
+        <div className="new-arrival-info">
+          <h3 className="arrival-name">{product.name}</h3>
+          <p className="arrival-desc">{product.description}</p>
+          <div className="sale-price-container" style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+             <span className="arrival-price" style={{color: '#d32f2f'}}>{formatPrice(product.price)}</span>
+             <span className="sale-original-price" style={{textDecoration: 'line-through', color: '#999', fontSize: '14px'}}>{formatPrice(product.originalPrice)}</span>
+          </div>
         </div>
-        <button 
-          className="sale-add-to-cart"
-          onClick={(e) => { e.stopPropagation(); addToCart({ ...product, image: product.images[0], selectedSize: product.size.split(',')[0].trim() }); }}
-        >
-          Add to Cart
-        </button>
       </div>
-    </div>
+
+      {showSizeModal && (
+        <SizeSelectionModal
+          product={{...product, image: product.images[0]}}
+          onClose={() => setShowSizeModal(false)}
+          onAddToCart={addToCart}
+        />
+      )}
+    </>
   );
 }
 
-// =============================================
-// FINAL SALE PAGE COMPONENT
-// =============================================
 export default function FinalSalePage({ onBack }) {
   return (
-    <section className="final-sale-page">
-      <div className="sale-page-header">
-        <button className="back-button" onClick={onBack}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Back
-        </button>
-        <div className="sale-banner">
-          <span className="sale-badge">FINAL SALE</span>
-          <h1 className="sale-title">🔥 Special Discount 20% OFF 🔥</h1>
-          <p className="sale-subtitle">สินค้าลดราคาพิเศษ จำนวนจำกัด!</p>
-        </div>
+    <section className="new-arrivals" style={{paddingTop: '140px', background: '#fff'}}>
+      <div className="section-header">
+        <span className="section-tag" style={{color: '#d32f2f'}}>Final Offer</span>
+        <h2 className="section-title">FINAL SALE</h2>
+        <div className="section-line" />
       </div>
       
-      <div className="sale-products-grid">
+      <div className="arrivals-grid">
         {saleProductsData.map((product) => (
-          <SaleProductCard key={product.id} product={product} />
+          <SaleCard key={product.id} product={product} />
         ))}
       </div>
     </section>

@@ -42,20 +42,22 @@ export default function ProductGallery({ onBack, initialSearchTerm = '', initial
   let filteredProducts = allProducts.filter((product) => {
     const matchesFilter =
       activeFilter === "all" || product.category === activeFilter;
+    const productName = product.name || "";
+    const productModel = product.model || "";
     const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.model.toLowerCase().includes(searchTerm.toLowerCase());
+      productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      productModel.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
   // Sort products
   if (sortBy === "price-low") {
-    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+    filteredProducts = [...filteredProducts].sort((a, b) => (a.price || 0) - (b.price || 0));
   } else if (sortBy === "price-high") {
-    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+    filteredProducts = [...filteredProducts].sort((a, b) => (b.price || 0) - (a.price || 0));
   } else if (sortBy === "name") {
     filteredProducts = [...filteredProducts].sort((a, b) =>
-      a.name.localeCompare(b.name)
+      (a.name || "").localeCompare(b.name || "")
     );
   }
 

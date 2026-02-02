@@ -38,9 +38,11 @@ export function ProductProvider({ children }) {
       const dynamicProducts = snapshot.docs.map(doc => ({
         id: `fs-${doc.id}`, // specific prefix for firestore items if needed, or just use doc.id if unique enough
         ...doc.data(),
+        name: doc.data().name || "Unnamed Product",
+        price: doc.data().price || 0,
         category: doc.data().collection || 'unisex',
-        model: doc.data().model || doc.data().name // Ensure model exists for search
-      }));
+        model: doc.data().model || doc.data().name || "" // Ensure model exists for search
+      })).filter(product => product.name !== "Unnamed Product"); // Filter out invalid/incomplete products
 
       // Merge: Dynamic products might duplicate static ones if not careful. 
       // For now, we assume admin only adds NEW products.
