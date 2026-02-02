@@ -168,7 +168,7 @@ function SaleCard({ product }) {
 
 export default function FinalSalePage({ onBack }) {
   return (
-    <section className="new-arrivals" style={{paddingTop: '140px', background: '#fff'}}>
+    <section id="final-sale" className="new-arrivals" style={{paddingTop: '40px', paddingBottom: '80px', background: '#fff'}}>
       <div className="section-header">
         <span className="section-tag" style={{color: '#d32f2f'}}>Final Offer</span>
         <h2 className="section-title">FINAL SALE</h2>

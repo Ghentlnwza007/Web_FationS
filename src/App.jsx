@@ -55,6 +55,7 @@ import WishlistSidebar from './features/shop/wishlist/WishlistSidebar';
 // Features - Support
 import UnifiedChatWidget from './features/support/components/UnifiedChatWidget';
 import ClientServices from './features/support/components/ClientServices';
+import FAQPage from './features/support/components/FAQPage';
 
 // =============================================
 // MAIN APP COMPONENT
@@ -106,6 +107,7 @@ function App() {
                         <Hero />
                         <Collections onOpenModal={setActiveModal} />
                         <NewArrivals />
+                        <FinalSalePage />
                         <About />
                       </>
                     )}
@@ -122,12 +124,14 @@ function App() {
                       />
                     )}
 
-                    {currentPage === "sale" && (
-                      <FinalSalePage onBack={() => navigateTo("home")} />
-                    )}
+                    {/* Final Sale Page moved to Home */}
 
                     {currentPage === "contact" && (
                       <ClientServices />
+                    )}
+
+                    {currentPage === "faq" && (
+                      <FAQPage />
                     )}
 
                     {currentPage === "admin" && (

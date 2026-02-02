@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 
 // =============================================
 // ORDERING GUIDE MODAL COMPONENT - PREMIUM EDITION
@@ -85,17 +84,6 @@ export default function OrderingGuide({ isOpen, onClose }) {
     }
   ];
 
-  // Add Google Fonts dynamically
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
-
   const styles = {
     overlay: {
       position: 'fixed',
@@ -103,7 +91,7 @@ export default function OrderingGuide({ isOpen, onClose }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(26,26,26,0.98) 100%)',
+      background: 'rgba(0,0,0,0.6)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -111,18 +99,18 @@ export default function OrderingGuide({ isOpen, onClose }) {
       padding: '20px',
       opacity: animateIn ? 1 : 0,
       transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      backdropFilter: 'blur(10px)'
+      backdropFilter: 'blur(8px)'
     },
     modal: {
-      background: 'linear-gradient(180deg, #1f1f1f 0%, #141414 100%)',
+      background: '#ffffff',
       borderRadius: '24px',
       maxWidth: '720px',
       width: '100%',
       maxHeight: '88vh',
       overflow: 'hidden',
-      color: '#fff',
+      color: '#1a1a1a',
       position: 'relative',
-      boxShadow: '0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,165,90,0.15), inset 0 1px 0 rgba(255,255,255,0.05)',
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       transform: animateIn ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
       opacity: animateIn ? 1 : 0,
       transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -130,8 +118,8 @@ export default function OrderingGuide({ isOpen, onClose }) {
     },
     header: {
       padding: '32px 32px 24px',
-      background: 'linear-gradient(180deg, rgba(201,165,90,0.12) 0%, transparent 100%)',
-      borderBottom: '1px solid rgba(201,165,90,0.2)',
+      background: '#ffffff',
+      borderBottom: '1px solid #f0f0f0',
       position: 'sticky',
       top: 0,
       zIndex: 2
@@ -143,9 +131,9 @@ export default function OrderingGuide({ isOpen, onClose }) {
       width: '40px',
       height: '40px',
       borderRadius: '50%',
-      background: 'rgba(255,255,255,0.05)',
-      border: '1px solid rgba(255,255,255,0.1)',
-      color: '#fff',
+      background: '#f5f5f5',
+      border: '1px solid #e0e0e0',
+      color: '#1a1a1a',
       fontSize: '20px',
       cursor: 'pointer',
       display: 'flex',
@@ -156,36 +144,35 @@ export default function OrderingGuide({ isOpen, onClose }) {
     title: {
       fontSize: '2rem',
       fontWeight: 600,
-      background: 'linear-gradient(135deg, #c9a55a 0%, #f5e6c3 50%, #c9a55a 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
+      color: '#1a1a1a',
       margin: 0,
       textAlign: 'center',
       fontFamily: "'Playfair Display', serif",
-      letterSpacing: '1px'
+      letterSpacing: '0.5px'
     },
     subtitle: {
       textAlign: 'center',
-      color: 'rgba(255,255,255,0.5)',
-      marginTop: '10px',
+      color: '#666666',
+      marginTop: '8px',
       fontSize: '0.95rem',
-      fontWeight: 300,
+      fontWeight: 400,
       letterSpacing: '0.5px'
     },
     content: {
       padding: '28px 32px',
       overflowY: 'auto',
-      maxHeight: 'calc(88vh - 200px)'
+      maxHeight: 'calc(88vh - 200px)',
+      background: '#fafafa'
     },
     stepContainer: {
       display: 'flex',
       gap: '20px',
-      marginBottom: '20px',
+      marginBottom: '16px',
       padding: '20px',
-      background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+      background: '#ffffff',
       borderRadius: '16px',
-      border: '1px solid rgba(255,255,255,0.05)',
+      border: '1px solid #eeeeee',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
       transition: 'all 0.3s ease',
       position: 'relative',
       overflow: 'hidden'
@@ -200,12 +187,13 @@ export default function OrderingGuide({ isOpen, onClose }) {
       justifyContent: 'center',
       fontSize: '26px',
       flexShrink: 0,
-      boxShadow: '0 8px 24px rgba(201,165,90,0.3)'
+      color: '#ffffff',
+      boxShadow: '0 8px 16px rgba(201,165,90,0.25)'
     },
     stepNumber: {
       color: '#c9a55a',
       fontSize: '0.8rem',
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: '1px',
       textTransform: 'uppercase',
       marginBottom: '4px',
@@ -214,49 +202,28 @@ export default function OrderingGuide({ isOpen, onClose }) {
     stepTitle: {
       fontSize: '1.15rem',
       fontWeight: 600,
-      color: '#fff',
-      margin: '0 0 8px 0',
+      color: '#1a1a1a',
+      margin: '0 0 6px 0',
       fontFamily: "'Playfair Display', serif"
     },
     stepDesc: {
       fontSize: '0.9rem',
-      color: 'rgba(255,255,255,0.6)',
+      color: '#555555',
       margin: 0,
-      lineHeight: 1.7,
-      fontWeight: 300
+      lineHeight: 1.6,
+      fontWeight: 400
     },
-    footer: {
-      padding: '24px 32px',
-      background: 'linear-gradient(180deg, rgba(201,165,90,0.08) 0%, rgba(201,165,90,0.15) 100%)',
-      borderTop: '1px solid rgba(201,165,90,0.2)',
-      textAlign: 'center'
-    },
-    footerTitle: {
-      margin: '0 0 8px 0',
-      color: '#c9a55a',
-      fontWeight: 500,
-      fontSize: '1rem',
-      fontFamily: "'Playfair Display', serif"
-    },
-    footerText: {
-      margin: 0,
-      color: 'rgba(255,255,255,0.5)',
-      fontSize: '0.9rem'
-    },
-    goldText: {
-      color: '#c9a55a',
-      fontWeight: 500
-    },
+
     decorLine: {
       width: '60px',
       height: '3px',
-      background: 'linear-gradient(90deg, transparent, #c9a55a, transparent)',
+      background: '#c9a55a',
       margin: '16px auto 0',
       borderRadius: '2px'
     }
   };
 
-  return createPortal(
+  return (
     <div 
       style={styles.overlay}
       onClick={(e) => e.target === e.currentTarget && onClose()}
@@ -268,12 +235,12 @@ export default function OrderingGuide({ isOpen, onClose }) {
             onClick={onClose}
             style={styles.closeBtn}
             onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(201,165,90,0.2)';
-              e.target.style.borderColor = 'rgba(201,165,90,0.4)';
+              e.target.style.background = '#e0e0e0';
+              e.target.style.borderColor = '#c0c0c0';
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255,255,255,0.05)';
-              e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+              e.target.style.background = '#f5f5f5';
+              e.target.style.borderColor = '#e0e0e0';
             }}
             aria-label="ปิด"
           >✕</button>
@@ -292,14 +259,14 @@ export default function OrderingGuide({ isOpen, onClose }) {
                 animationDelay: `${index * 0.08}s`
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201,165,90,0.08) 0%, rgba(201,165,90,0.03) 100%)';
-                e.currentTarget.style.borderColor = 'rgba(201,165,90,0.2)';
-                e.currentTarget.style.transform = 'translateX(8px)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.08)';
+                e.currentTarget.style.borderColor = '#c9a55a';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                e.currentTarget.style.transform = 'translateX(0)';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+                e.currentTarget.style.borderColor = '#eeeeee';
               }}
             >
               <div style={styles.stepIcon}>
@@ -314,15 +281,8 @@ export default function OrderingGuide({ isOpen, onClose }) {
           ))}
         </div>
 
-        {/* Footer */}
-        <div style={styles.footer}>
-          <p style={styles.footerTitle}>✨ มีคำถามเพิ่มเติม?</p>
-          <p style={styles.footerText}>
-            ติดต่อเราทาง LINE: <span style={styles.goldText}>@maison</span> หรือโทร <span style={styles.goldText}>02-123-4567</span>
-          </p>
-        </div>
+
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }

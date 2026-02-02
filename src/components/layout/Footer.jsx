@@ -83,7 +83,7 @@ export default function Footer({ onNavigate, onNavigateCategory, onShowOrderingG
               <a href="#new" onClick={(e) => handleShopLink(e, 'new-arrivals')}>New Arrivals</a>
             </li>
             <li>
-              <a href="#sale" onClick={(e) => handlePageLink(e, 'sale')}>Sale</a>
+              <a href="#sale" onClick={(e) => handleScrollLink(e, 'final-sale')}>Sale</a>
             </li>
           </ul>
         </div>
@@ -95,7 +95,7 @@ export default function Footer({ onNavigate, onNavigateCategory, onShowOrderingG
               <a href="#contact" onClick={(e) => handlePageLink(e, 'contact')}>Contact Us</a>
             </li>
             <li>
-              <a href="#faqs">FAQs</a>
+              <a href="#faqs" onClick={(e) => handlePageLink(e, 'faq')}>FAQs</a>
             </li>
             <li>
               <a href="#shipping" onClick={(e) => { e.preventDefault(); onShowOrderingGuide && onShowOrderingGuide(); }}>Shipping Info / วิธีสั่งซื้อ</a>
