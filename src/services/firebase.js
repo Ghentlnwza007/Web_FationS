@@ -1,9 +1,9 @@
-// Firebase configuration and initialization (Compat mode for v8 syntax)
+// การตั้งค่าและเริ่มต้นการทำงานของ Firebase (ใช้โหมด Compat สำหรับไวยากรณ์ v8)
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-// Firebase configuration for web-kantawan project
+// การตั้งค่า Firebase สำหรับโปรเจกต์ web-kantawan (ระบุ Key ต่างๆ)
 const firebaseConfig = {
   apiKey: "AIzaSyCieAhFTn4dL0FuB-SAC4-gtYBVrJlpHrA",
   authDomain: "web-kantawan.firebaseapp.com",
@@ -14,25 +14,25 @@ const firebaseConfig = {
   measurementId: "G-T4J8H8WN7P"
 };
 
-// Check if config is placeholder
+// ตรวจสอบว่าเป็น Config ตัวอย่างหรือไม่ (ถ้าใช่จะแสดง Error แจ้งเตือน)
 const isPlaceholderConfig = firebaseConfig.apiKey === "YOUR_API_KEY_HERE";
 
-// Initialize Firebase
+// เริ่มต้นการทำงานของ Firebase (Initialize)
 let auth, db;
 
 if (isPlaceholderConfig) {
-  console.warn("⚠️ Firebase config not set! Please update src/firebase.js with your Firebase configuration.");
-  console.warn("Get your config from: https://console.firebase.google.com/");
+  console.warn("⚠️ ยังไม่ได้ตั้งค่า Firebase! กรุณาอัปเดตไฟล์ src/firebase.js ด้วยข้อมูล Config ของคุณ");
+  console.warn("รับข้อมูล Config ได้ที่: https://console.firebase.google.com/");
   
-  // Create mock objects to prevent crashes
+    // สร้าง Mock Object (ของปลอม) เพื่อป้องกันหน้าเว็บพัง ถ้ายังไม่ได้ใส่ Config
   auth = {
     onAuthStateChanged: (callback) => {
       callback(null);
       return () => {};
     },
-    signInWithEmailAndPassword: () => Promise.reject(new Error("Firebase not configured")),
-    createUserWithEmailAndPassword: () => Promise.reject(new Error("Firebase not configured")),
-    signInWithPopup: () => Promise.reject(new Error("Firebase not configured")),
+    signInWithEmailAndPassword: () => Promise.reject(new Error("ยังไม่ได้ตั้งค่า Firebase")),
+    createUserWithEmailAndPassword: () => Promise.reject(new Error("ยังไม่ได้ตั้งค่า Firebase")),
+    signInWithPopup: () => Promise.reject(new Error("ยังไม่ได้ตั้งค่า Firebase")),
     signOut: () => Promise.resolve()
   };
   
@@ -48,9 +48,11 @@ if (isPlaceholderConfig) {
     })
   };
 } else {
+  // เริ่มต้น Firebase จริง (ถ้ายังไม่ได้เริ่ม)
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
+  // ส่งออกตัวแปรสำหรับใช้งาน: auth (ระบบสมาชิก), db (ฐานข้อมูล)
   auth = firebase.auth();
   db = firebase.firestore();
 }
