@@ -8,7 +8,7 @@ const SuccessModal = ({ isOpen, onClose, title, message }) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="modal-overlay">
+    <div className="modal-overlay" style={{ display: 'flex', opacity: 1, visibility: 'visible' }}>
       <div className="success-modal-content">
         <div className="success-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -19,7 +19,8 @@ const SuccessModal = ({ isOpen, onClose, title, message }) => {
         <h3 className="success-title">{title}</h3>
         <p className="success-message">{message}</p>
         <button className="success-btn" onClick={onClose} data-testid="success-modal-close">
-          ซื้อสินค้าต่อ
+          {/* Note: This button text might need to be passed as prop for translation if needed */}
+          OK
         </button>
       </div>
     </div>,
@@ -183,6 +184,7 @@ const ClientServices = () => {
   const handleAppointmentSubmit = (e) => {
     e.preventDefault();
     console.log("Appointment submitting...", appointment);
+    // DEBUG ALERT REMOVED
     setModalState({
       isOpen: true,
       title: text.appointment.successTitle,

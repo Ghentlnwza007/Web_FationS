@@ -63,7 +63,8 @@ textarea:focus-visible {
 }
 
 /* Reduced Motion Support - สำหรับผู้ที่ต้องการปิด animations */
-@media (prefers-reduced-motion: reduce) {
+/* Reduced Motion Support - DISABLED to force smooth feel as per request */
+/* @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
@@ -77,7 +78,7 @@ textarea:focus-visible {
   .hero-bg video {
     transform: none !important;
   }
-}
+} */
 
 /* High Contrast Mode Support */
 @media (prefers-contrast: high) {

@@ -97,7 +97,7 @@ const saleProductsData = [
 // Reusing the Card logic but adapted for Sale Data
 function SaleCard({ product }) {
   const { addToCart } = useContext(CartContext);
-  const { formatPrice } = useContext(CurrencyContext);
+  const { formatPrice, t } = useContext(CurrencyContext);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [showSizeModal, setShowSizeModal] = useState(false);
@@ -129,7 +129,7 @@ function SaleCard({ product }) {
             alt={product.name}
             loading="lazy"
           />
-          <span className="arrival-tag sale">SALE -20%</span>
+          <span className="arrival-tag sale">{t('sale.tag')}</span>
           
           {isHovered && product.images.length > 1 && (
             <>
@@ -167,11 +167,13 @@ function SaleCard({ product }) {
 }
 
 export default function FinalSalePage({ onBack }) {
+  const { t } = useContext(CurrencyContext);
+
   return (
     <section id="final-sale" className="new-arrivals" style={{paddingTop: '40px', paddingBottom: '80px', background: '#fff'}}>
       <div className="section-header">
-        <span className="section-tag" style={{color: '#d32f2f'}}>Final Offer</span>
-        <h2 className="section-title">FINAL SALE</h2>
+        <span className="section-tag" style={{color: '#d32f2f'}}>{t('sale.final_offer')}</span>
+        <h2 className="section-title">{t('sale.title')}</h2>
         <div className="section-line" />
       </div>
       

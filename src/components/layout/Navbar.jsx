@@ -234,7 +234,13 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            onNavigate("sale");
+            if (currentPage !== 'home') {
+              onNavigate("home", { skipScroll: true });
+            }
+            setTimeout(() => {
+              const element = document.getElementById("final-sale");
+              if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
           }}
           className="sale-link"
         >
@@ -310,7 +316,17 @@ export default function Navbar({ currentPage, onNavigate, onNavigateCategory, on
               <BrandsIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
               {t('nav.brands')}
             </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate("sale"); setMenuOpen(false); }}>
+            <a href="#" onClick={(e) => { 
+              e.preventDefault(); 
+              if (currentPage !== 'home') {
+                onNavigate("home", { skipScroll: true }); 
+              }
+              setMenuOpen(false);
+              setTimeout(() => {
+                const element = document.getElementById("final-sale");
+                if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            }}>
               <SaleIcon style={{marginRight: '12px', verticalAlign: 'middle'}} />
               {t('nav.sale')}
             </a>

@@ -68,9 +68,11 @@ function App() {
   const [galleryCategory, setGalleryCategory] = useState('all');
   const [showOrderingGuide, setShowOrderingGuide] = useState(false);
 
-  const navigateTo = (page) => {
+  const navigateTo = (page, options = {}) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!options.skipScroll) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const navigateToCategory = (category) => {
@@ -103,41 +105,49 @@ function App() {
                     />
 
                     {currentPage === "home" && (
-                      <>
+                      <div key="home" className="page-transition">
                         <Hero />
                         <Collections onOpenModal={setActiveModal} />
                         <NewArrivals />
                         <FinalSalePage />
                         <About />
-                      </>
+                      </div>
                     )}
 
                     {currentPage === "gallery" && (
-                      <ProductGallery 
-                        onBack={() => {
-                          setGlobalSearchTerm('');
-                          setGalleryCategory('all');
-                          navigateTo("home");
-                        }}
-                        initialSearchTerm={globalSearchTerm}
-                        initialCategory={galleryCategory}
-                      />
+                      <div key="gallery" className="page-transition">
+                        <ProductGallery 
+                          onBack={() => {
+                            setGlobalSearchTerm('');
+                            setGalleryCategory('all');
+                            navigateTo("home");
+                          }}
+                          initialSearchTerm={globalSearchTerm}
+                          initialCategory={galleryCategory}
+                        />
+                      </div>
                     )}
 
                     {/* Final Sale Page moved to Home */}
 
                     {currentPage === "contact" && (
-                      <ClientServices />
+                      <div key="contact" className="page-transition">
+                        <ClientServices />
+                      </div>
                     )}
 
                     {currentPage === "faq" && (
-                      <FAQPage />
+                      <div key="faq" className="page-transition">
+                        <FAQPage />
+                      </div>
                     )}
 
                     {currentPage === "admin" && (
-                      <ProtectedRoute requiredRole="admin">
-                        <AdminPanel onBack={() => navigateTo("home")} />
-                      </ProtectedRoute>
+                      <div key="admin" className="page-transition">
+                        <ProtectedRoute requiredRole="admin">
+                          <AdminPanel onBack={() => navigateTo("home")} />
+                        </ProtectedRoute>
+                      </div>
                     )}
 
                     <Footer 

@@ -64,4 +64,10 @@ export const translations = {
   'footer.faq': { th: 'คำถามที่พบบ่อย', en: 'FAQ' },
   'footer.social': { th: 'ติดตามเรา', en: 'Follow Us' },
   'footer.rights': { th: 'สงวนลิขสิทธิ์', en: 'All Rights Reserved' },
+
+
+  // Sale Section
+  'sale.final_offer': { th: 'ข้อเสนอสุดท้าย', en: 'Final Offer' },
+  'sale.title': { th: 'ลดราคาสุดท้าย', en: 'FINAL SALE' },
+  'sale.tag': { th: 'ลด 20%', en: 'SALE -20%' },
 };
